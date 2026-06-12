@@ -1,0 +1,119 @@
+<?php
+
+//echo("<HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE>\n");
+
+// summary stats
+
+$compstrings=array("any","running","not started","complete","dead");
+
+if (""==$user) {
+  if (""!=$lastjobuser) {
+    $user=$lastjobuser;
+  } elseif (""==$userid) {
+    $user="%";
+  } else {
+    $user=$userid;
+  }
+}
+if (""==$complete && ""!=$lastjobcomplete) {
+  $complete=$lastjobcomplete;
+} elseif (""==$complete) {
+  $complete=-1;
+}
+if (""==$machinename) {
+  $machinename="%";
+}
+if (-2==$complete) {
+  $sql="SELECT *,(to_days(lastdate)*3600*24+time_to_sec(lastdate)-to_days(startdate)*3600*24-time_to_sec(startdate)) as duration" .
+    " FROM tQueue" .
+    " WHERE user like \"$user\"" .
+    " AND note like \"%$notemask%\"" .
+    " AND (machinename like \"$machinename\"" .
+    " OR (\"%\"=\"$machinename\" AND isnull(machinename)))" .
+    " ORDER BY $orderby";
+} else {
+  $sql="SELECT *,(to_days(lastdate)*3600*24+time_to_sec(lastdate)-to_days(startdate)*3600*24-time_to_sec(startdate)) as duration" .
+    " FROM tQueue" .
+    " WHERE user like \"$user\"" .
+    " AND note like \"%$notemask%\"" .
+    " AND (machinename like \"$machinename\"" .
+    " OR (\"%\"=\"$machinename\" AND isnull(machinename)))" .
+    " AND complete=$complete" .
+    " ORDER BY $orderby";
+}
+
+if ("%"==$machinename && ""==$notemask) {
+  $sql="SELECT complete,count(id) as activecount FROM tQueue WHERE user like \"$user\" GROUP BY complete ORDER BY complete";
+} elseif ("%"==$machinename) {
+  $sql="SELECT complete,count(id) as activecount FROM tQueue WHERE user like \"$user\" AND note like \"%$notemask%\" GROUP BY complete ORDER BY complete";
+} elseif (""==$notemask) {
+  $sql="SELECT complete,count(id) as activecount FROM tQueue WHERE user like \"$user\" AND machinename like \"$machinename\" GROUP BY complete ORDER BY complete";
+} else {
+  $sql="SELECT complete,count(id) as activecount FROM tQueue WHERE user like \"$user\" AND machinename like \"$machinename\" AND note like \"%$notemask%\" GROUP BY complete ORDER BY complete";
+}
+
+$activedata=mysqli_query($dbcnx, $sql);
+$userjobcount=array(0,0,0,0,0);
+while ( $row = mysqli_fetch_array($activedata) ) {
+  $userjobcount[($row["complete"]+2)]=$row["activecount"];
+}
+
+$sql="SELECT complete,count(id) as activecount FROM tQueue GROUP BY complete ORDER BY complete";
+$activedata=mysqli_query($dbcnx, $sql);
+$jobcount=array(0,0,0,0,0);
+while ( $row = mysqli_fetch_array($activedata) ) {
+  $jobcount[($row["complete"]+2)]=$row["activecount"];
+}
+
+echo("<a href=\"queuemonitor.php?userid=$userid&sessionid=$sessionid&user=$user&complete=$complete&notemask=" .
+     rawurlencode($notemask) . "&machinename=$machinename\">");
+echo("Jobs:</a>  ");
+for ($ii=1; $ii<count($compstrings); $ii++) {
+  echo("<a href=\"queuemonitor.php?userid=$userid&sessionid=$sessionid&");
+  echo("user=$user&complete=" . ($ii-2) . "&notemask=" . 
+       rawurlencode($notemask) . "&machinename=$machinename\">");
+  echo($userjobcount[($ii)] . "/" . $jobcount[($ii)] . " " . 
+       $compstrings[$ii] . "</a> / ");
+}
+echo(" (user/total) -- $userid($seclevel)<br>\n");
+
+$sql="SELECT count(load1) as nodecount,sum(dead) as deadcount,sum(lastoverload * (1-dead)) as oloadcount,sum(maxproc * (1-lastoverload) * (1-dead)) as maxproc,avg(load1) as meanload FROM tComputer WHERE allowqueuemaster in (1,2);";
+$compdata=mysqli_query($dbcnx, $sql);
+$row = mysqli_fetch_array($compdata);
+
+echo("<a href=\"queuemachines.php?userid=$userid&sessionid=$sessionid&complete=$complete&notemask=" . rawurlencode($notemask) . "\">");
+echo("Machines:</a>  ");
+echo($row["nodecount"] . " nodes / ");
+echo($row["deadcount"] . " dead / ");
+echo($row["oloadcount"] . " o'load / ");
+echo($row["maxproc"] . " procs max / ");
+echo(sprintf("%.2f",$row["meanload"]) . " mean load\n");
+
+echo(" --- ");
+
+$sql="SELECT count(gUserPrefs.id) as usercount" .
+     " FROM gUserPrefs";
+$userdata=mysqli_query($dbcnx, $sql);
+$row = mysqli_fetch_array($userdata);
+$usercount=$row["usercount"];
+
+$sql="SELECT DISTINCT user" .
+     " FROM tQueue" .
+     " WHERE complete=-1 OR complete=0";
+$userdata=mysqli_query($dbcnx, $sql);
+$activeusercount=mysqli_num_rows($userdata);
+
+echo("<a href=\"queueusers.php?userid=$userid&sessionid=$sessionid&notemask=" . rawurlencode($notemask) . "&activeusers=1\">");
+echo("Users:</a>  ");
+
+echo($activeusercount . " active / ");
+echo($usercount . " total");
+
+echo(" --- ");
+
+echo("<a href=\"queuestats.php?userid=$userid&sessionid=$sessionid&notemask=" . rawurlencode($notemask) . "&activeusers=1\">");
+echo("Stats</a>  ");
+
+echo("<HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE>\n");
+
+?>

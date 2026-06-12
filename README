@@ -1,0 +1,47 @@
+INSTRUCTIONS FOR SETTING UP CELLDB 
+STEPHEN DAVID
+davids@ohsu.edu
+Revised 2013-03-02
+
+-----------------------------------------------------
+Please use git/google code to manage celldb changes!!
+-----------------------------------------------------
+
+Quick & dirty instructions for getting celldb up and running on a
+linux server.  This also installs the infrastructure for the queue,
+although a few extra steps are required to actually get the queue
+running.
+
+1. Make sure you have a web server with php extensions installed
+
+2. Make sure mysqld is installed.
+
+3. Copy the contents of this directory (including children) into the
+   path of the web server. eg, on a linux seruver that might be
+   /var/www/html/celldb/
+
+5. In mysql, create a database called "cell". also create a user with
+   full privileges for that database: id="celldb_user" pw="celldb_123"
+   (these are hard coded in config.php... You can use whatever
+   settings you want but they need to match the settings in
+   config.php)
+
+7. Copy config.php from the setup/ directory to the main celldb
+   directory.  Edit the settings to reflect the name of your mysql
+   server ($dbserver) and the login information ($dbname, $dbuser,
+   $dbpassword) for for database.
+
+8. Browse to http://hostname/celldb/setup/setup.php Assuming you've
+   set up everything correctly, this should connect to the mysql
+   server and create the necessary tables in the database.  Error
+   messages may be informative.
+
+9. That should be it!  Browse to "http://localhost/celldb/index.php"
+   to create an account and/or log in.
+
+---- TO DOs: 
+
+- Document path setup for baphy to save behavior and/or analysis
+figures to celldb
+- Extra documentation for usage.
+- Test?
