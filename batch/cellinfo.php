@@ -38,12 +38,12 @@ if (""==$show) {
   $show="summ";
 }
 
-$sql="SELECT sRunData.cellid,sRunData.batch,sResults.matstr,sResults.lastmod,".
-" sBatch.name, sBatch.details".
-" FROM sRunData LEFT JOIN sResults".
-" ON sRunData.id=sResults.runid".
-" INNER JOIN sBatch ON sRunData.batch=sBatch.id".
-" WHERE cellid='$cellid' ORDER BY sRunData.batch";
+$sql="SELECT srundata.cellid,srundata.batch,sresults.matstr,sresults.lastmod,".
+" sbatch.name, sbatch.details".
+" FROM srundata LEFT JOIN sresults".
+" ON srundata.id=sresults.runid".
+" INNER JOIN sbatch ON srundata.batch=sbatch.id".
+" WHERE cellid='$cellid' ORDER BY srundata.batch";
 $celldata=mysqli_query($dbcnx, $sql);
 
 if ("summ"==$show) {
@@ -78,10 +78,10 @@ if ("summ"==$show) {
 
 } elseif ("cells"==$show) {
   // list all cells in batch
-  $rundata=mysqli_query($dbcnx, "SELECT sRunData.*, gCellMaster.penid,sResults.matstr".
-                       " FROM sRunData INNER JOIN gCellMaster".
-                       " ON sRunData.masterid=gCellMaster.id".
-                       " LEFT JOIN sResults ON sRunData.id=sResults.runid".
+  $rundata=mysqli_query($dbcnx, "SELECT srundata.*, gcellmaster.penid,sresults.matstr".
+                       " FROM srundata INNER JOIN gcellmaster".
+                       " ON srundata.masterid=gcellmaster.id".
+                       " LEFT JOIN sresults ON srundata.id=sresults.runid".
                        " WHERE batch=".$batchid);
   echo("<table>\n");
   while ($row=mysqli_fetch_array($rundata)) {

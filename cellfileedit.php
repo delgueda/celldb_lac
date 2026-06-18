@@ -7,8 +7,8 @@ modified 10/02/05 - generic view interface - SVD
 ***/
 
 // userid - string id of user to go in added by
-// masterid - id in gCellMaster
-// rawid - id in gDataRaw (-1 for add new entry)
+// masterid - id in gcellmaster
+// rawid - id in gdataraw (-1 for add new entry)
 // action 0 - add file
 //        1 - edit file
 //        2 - delete file? (not used)
@@ -21,13 +21,13 @@ $errormsg="";
 
 if (""!=$masterid) {
    $celldata = mysqli_query($dbcnx, "SELECT cellid,penid,penname,siteid,animal,well".
-                           " FROM gCellMaster WHERE id=$masterid");
+                           " FROM gcellmaster WHERE id=$masterid");
    $masterdata=mysqli_fetch_array($celldata);
    extract($masterdata,EXTR_SKIP); 
 }
 
 // conform to appropriate channel naming scheme
-$sql="SELECT * FROM gPenetration WHERE id=$penid";
+$sql="SELECT * FROM gpenetration WHERE id=$penid";
 $pendata=mysqli_query($dbcnx, $sql);
 if ($penrow=mysqli_fetch_array($pendata)) {
   $numchans=$penrow["numchans"];
@@ -58,8 +58,8 @@ if (2==$action) {
   // get data posted by user
   $formdata=$_REQUEST;
   
-  // figure out runclass to insert/update in gDataRaw
-  $sql="SELECT DISTINCT id,name FROM gRunClass where id=$runclassid";
+  // figure out runclass to insert/update in gdataraw
+  $sql="SELECT DISTINCT id,name FROM grunclass where id=$runclassid";
   $runclassdata=mysqli_query($dbcnx, $sql);
   $row=mysqli_fetch_array($runclassdata);
   $runclass=$row["name"];
@@ -78,7 +78,7 @@ if (2==$action) {
   }
 
   // actually save/update the data
-  $errormsg=savedata("gDataRaw",$rawid,$formdata);
+  $errormsg=savedata("gdataraw",$rawid,$formdata);
   
   if (is_numeric($errormsg)) {
     $rawid=$errormsg;
@@ -94,14 +94,14 @@ if (2==$action) {
     $channum[$ii]=(int)$channum[$ii];
     $channel[$ii]=$chanstrings[$channum[$ii]-1];
     
-    $sql="SELECT * FROM gSingleCell WHERE id=" . $singleid[$ii];
+    $sql="SELECT * FROM gsinglecell WHERE id=" . $singleid[$ii];
     $singledata=mysqli_query($dbcnx, $sql);
     $singrow=mysqli_fetch_array($singledata);
     $cellid0=$singrow["cellid"];
     if (-1==$singlerawid[$ii]) {
-       // need to create a new gSingleRaw entry
+       // need to create a new gsingleraw entry
        
-       $sql="INSERT INTO gSingleRaw" .
+       $sql="INSERT INTO gsingleraw" .
          " (cellid,masterid,singleid,penid,".
          "rawid,channel,unit,channum,".
          "isolation,crap,".
@@ -116,7 +116,7 @@ if (2==$action) {
        $singleid[$ii]=mysqli_insert_id();
        
      } else {
-       $sql="UPDATE gSingleRaw SET ".
+       $sql="UPDATE gsingleraw SET ".
          "cellid=\"$cellid0\",".
          "rawid=" . $rawid . ",".
          "isolation=" . $isolation[$ii] . ",".
@@ -137,13 +137,13 @@ if (2==$action) {
 
 // load values for the form
 if ($rawid>0) {
-  // raw data entry already exists.  load info from gDataRaw
-  $sql="SELECT * FROM gDataRaw WHERE id=$rawid";
+  // raw data entry already exists.  load info from gdataraw
+  $sql="SELECT * FROM gdataraw WHERE id=$rawid";
   $rawdata=mysqli_query($dbcnx, $sql);
   $rowcount=mysqli_num_rows($rawdata);
   
   if ($rowcount==0) {
-    $rawid=-1; // no entry currently exists in gDataRaw
+    $rawid=-1; // no entry currently exists in gdataraw
   } else {
     $row = mysqli_fetch_array($rawdata);
     // don't overwrite variables that have already been defined. 
@@ -158,9 +158,9 @@ if ($rawid>0) {
    $rowcount=0;
 }
 
-$sql="SELECT gPenetration.* FROM gPenetration,gCellMaster" .
-  " WHERE gPenetration.id=gCellMaster.penid" .
-  " AND gCellMaster.id=$masterid";
+$sql="SELECT gpenetration.* FROM gpenetration,gcellmaster" .
+  " WHERE gpenetration.id=gcellmaster.penid" .
+  " AND gcellmaster.id=$masterid";
 $pendata=mysqli_query($dbcnx, $sql);
 $penrow=mysqli_fetch_array($pendata);
 if ($penrow) {
@@ -170,20 +170,20 @@ if ($penrow) {
  }
 
 if (-1==$rawid and $masterid>0) {
-   // new rawdata. guess info from previous gDataRaw entry for this cell
-   $sql="SELECT max(gDataRaw.id) as maxid,".
+   // new rawdata. guess info from previous gdataraw entry for this cell
+   $sql="SELECT max(gdataraw.id) as maxid,".
      " sum(masterid=$masterid) as rawcount".
-     " FROM gDataRaw, gPenetration, gCellMaster" .
-     " WHERE gPenetration.id=gCellMaster.penid" .
-     " AND gDataRaw.masterid=gCellMaster.id" .
-     " AND gPenetration.animal=\"$animal\"";
+     " FROM gdataraw, gpenetration, gcellmaster" .
+     " WHERE gpenetration.id=gcellmaster.penid" .
+     " AND gdataraw.masterid=gcellmaster.id" .
+     " AND gpenetration.animal=\"$animal\"";
    //echo("$sql<br>");
 
    $rawdata=mysqli_query($dbcnx, $sql);
    $row=mysqli_fetch_array($rawdata);
    
    if (""==$row["maxid"]) {
-     $sql="SELECT max(id) as maxid FROM gDataRaw WHERE masterid=$masterid";
+     $sql="SELECT max(id) as maxid FROM gdataraw WHERE masterid=$masterid";
      $rawdata=mysqli_query($dbcnx, $sql);
      $row=mysqli_fetch_array($rawdata);
      $rawcount=0;
@@ -193,7 +193,7 @@ if (-1==$rawid and $masterid>0) {
    
    if (""<>$row["maxid"]) {
      $rowcount=1;
-     $sql="SELECT * FROM gDataRaw WHERE id=" . $row["maxid"];
+     $sql="SELECT * FROM gdataraw WHERE id=" . $row["maxid"];
      $lastrawdata=mysqli_query($dbcnx, $sql);
      $lastrow=mysqli_fetch_array($lastrawdata);
      

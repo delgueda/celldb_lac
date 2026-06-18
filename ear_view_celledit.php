@@ -12,13 +12,13 @@ echo(" <input type=\"hidden\" name=\"bkmk\" value=$bkmk>\n");
 echo("<table>\n");
 
 // animal dropdown
-$animaldata = mysqli_query($dbcnx, "SELECT DISTINCT animal FROM gAnimal ORDER BY animal");
+$animaldata = mysqli_query($dbcnx, "SELECT DISTINCT animal FROM ganimal ORDER BY animal");
 echo("<tr><td colspan=4><HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE></td></tr>\n");
 echo("<tr><td>Animal:</td><td>$animal</td>\n");
 
 // pentration dropdown
 $pendata = mysqli_query($dbcnx, "SELECT DISTINCT id,penname,well,numchans".
-                       " FROM gPenetration" .
+                       " FROM gpenetration" .
                        " WHERE animal=\"$animal\"".
                        " AND well=$well ORDER BY penname");
 echo("<td>Pen/Well:</td><td><select name=\"penid\" size=\"1\">");
@@ -88,7 +88,7 @@ echo("<td>Crap</td><td>Handplot\n");
 echo("<INPUT TYPE=SUBMIT VALUE=\"Save\"><INPUT TYPE=SUBMIT NAME=\"newcell\" VALUE=\"New Cell\"></td>\n");
 
 //info specific to each cell
-$singledata=mysqli_query($dbcnx, "SELECT * FROM gSingleCell".
+$singledata=mysqli_query($dbcnx, "SELECT * FROM gsinglecell".
                         " WHERE masterid=$masterid" .
                         " ORDER BY cellid,id");
 $cellcount=0;

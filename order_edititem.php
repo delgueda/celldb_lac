@@ -12,7 +12,7 @@ include_once "./celldb.php";
 if (!isset($id)) {
   $id=-1;
 }
-$table="oItem";
+$table="oitem";
 if (!isset($refpage)) {
   $refpage="order_items.php";
 }
@@ -83,7 +83,7 @@ while ($row=mysqli_fetch_array($tdata)) {
     echo("<tr>");
     echo("<td>".$row["Field"]."</td>");
     echo("<td><SELECT NAME=\"".$row["Field"]."\" SIZE=\"1\">");
-    $sql="SELECT * FROM oCompany ORDER BY name";
+    $sql="SELECT * FROM ocompany ORDER BY name";
     $cdata=mysqli_query($dbcnx, $sql);
     while ($crow=mysqli_fetch_array($cdata)) {
       

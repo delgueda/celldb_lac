@@ -5,7 +5,7 @@ created 2002 - SVD
 ***/
 
 // userid - string id of user to go in added by
-// masterid - id in gCellMaster
+// masterid - id in gcellmaster
 // action 0 - add file
 //        1 - edit file
 //        2 - do the edit/add and redirect back to $fnpeninfo
@@ -20,10 +20,10 @@ if (!isset($penid) || ""==$penid) {
 
 $errormsg="";
 
-// if save selected, save posted info to gCellMaster
+// if save selected, save posted info to gcellmaster
 if (2==$action) {
    if (-1==$penid) {
-      $sql="SELECT * FROM gPenetration WHERE penname=\"$penname\"";
+      $sql="SELECT * FROM gpenetration WHERE penname=\"$penname\"";
       $pendata = mysqli_query($dbcnx, $sql);
       $pendatarows=mysqli_num_rows($pendata);
       if ($pendatarows>0) {
@@ -32,7 +32,7 @@ if (2==$action) {
       }
       
       // if weights already recorded for this date, fix new pen to that penid
-      $sql="SELECT * FROM gPenetration".
+      $sql="SELECT * FROM gpenetration".
         " WHERE animal='$animal' AND pendate='$pendate' AND training=2";
       $pendata = mysqli_query($dbcnx, $sql);
       $pendatarows=mysqli_num_rows($pendata);
@@ -41,7 +41,7 @@ if (2==$action) {
         $penid=$penrow["id"];
       }
    } else {
-      $sql="SELECT * FROM gPenetration WHERE id=$penid";
+      $sql="SELECT * FROM gpenetration WHERE id=$penid";
       $pendata = mysqli_query($dbcnx, $sql);
       $pendatarows=mysqli_num_rows($pendata);
    }
@@ -103,7 +103,7 @@ if (2==$action) {
     unset($formdata["info"]);
 
     // actually save/update the data dynamically
-    $errormsg=savedata("gPenetration",$penid,$formdata);
+    $errormsg=savedata("gpenetration",$penid,$formdata);
 
     if (is_numeric($errormsg)) {
       $penid=$errormsg;
@@ -112,19 +112,19 @@ if (2==$action) {
 
     if ("" == $errormsg) {
       if (0 < $pendatarows) {
-        // gPenetration entry existed previously. update related gCellMaster and gDataRaw tables.
-        $sql="UPDATE gCellMaster SET".
+        // gpenetration entry existed previously. update related gcellmaster and gdataraw tables.
+        $sql="UPDATE gcellmaster SET".
           " well=" . $formdata["well"] . ",".
           " penname=\"" . mysqli_real_escape_string($dbcnx, $formdata["penname"]) . "\",".
           " training=" . $formdata["training"] . "".
           " WHERE penid=$penid";
         $result=mysqli_query($dbcnx, $sql);
 
-        $sql="SELECT * FROM gCellMaster where penid=$penid";
+        $sql="SELECT * FROM gcellmaster where penid=$penid";
         $masterdata=mysqli_query($dbcnx, $sql);
         
         while ($row=mysqli_fetch_array($masterdata)) {
-          $sql="UPDATE gDataRaw set training=" . $formdata["training"] . " WHERE masterid=" . $row["id"];
+          $sql="UPDATE gdataraw set training=" . $formdata["training"] . " WHERE masterid=" . $row["id"];
           $result=mysqli_query($dbcnx, $sql);
         }
       }
@@ -141,10 +141,10 @@ if (2==$action) {
 // load data pre-existing data about the penetration -- if it exists
 if (-1==$penid) {
    // only penname provided, see if it exists
-   $sql="SELECT * FROM gPenetration WHERE penname=\"$penname\"";
+   $sql="SELECT * FROM gpenetration WHERE penname=\"$penname\"";
 } else {
    // see if penid exists
-   $sql="SELECT * FROM gPenetration WHERE id=$penid";
+   $sql="SELECT * FROM gpenetration WHERE id=$penid";
 }
 
 $pendata = mysqli_query($dbcnx, $sql);
@@ -192,7 +192,7 @@ if ($pendatarows>0) {
    }
    
    if ("my"==$animal) {
-      $sql="SELECT animal FROM gPenetration".
+      $sql="SELECT animal FROM gpenetration".
          " WHERE addedby='$userid' ORDER BY lastmod DESC LIMIT 1";
       $latestpendata=mysqli_query($dbcnx, $sql);
       if ($row=mysqli_fetch_array($latestpendata)) {
@@ -209,7 +209,7 @@ if ($pendatarows>0) {
  
    // figure out defaults using last entry for that critter
    $sql="SELECT max(id) as maxid,max(well) as maxwell".
-     " FROM gPenetration" .
+     " FROM gpenetration" .
      " WHERE training in ($stset) AND animal like \"$animal\"";
    $latestpendata=mysqli_query($dbcnx, $sql);
    $row=mysqli_fetch_array($latestpendata);
@@ -221,8 +221,8 @@ if ($pendatarows>0) {
       $animal=$row["manimal"];
    }
    if (""==$latestid) {
-     $sql="SELECT gAnimal.cellprefix FROM gAnimal".
-       " WHERE gAnimal.animal=\"$animal\"";
+     $sql="SELECT ganimal.cellprefix FROM ganimal".
+       " WHERE ganimal.animal=\"$animal\"";
      $latestpendata=mysqli_query($dbcnx, $sql);
      $latestrow=mysqli_fetch_array($latestpendata);
      $cellprefix=$latestrow["cellprefix"];
@@ -231,9 +231,9 @@ if ($pendatarows>0) {
      $errormsg="Guessing penetration info from scratch.";
      
    } else {
-     $sql="SELECT gPenetration.*, gAnimal.cellprefix FROM gPenetration".
-       " INNER JOIN gAnimal ON gAnimal.animal=gPenetration.animal".
-       " WHERE gPenetration.id=$latestid";
+     $sql="SELECT gpenetration.*, ganimal.cellprefix FROM gpenetration".
+       " INNER JOIN ganimal ON ganimal.animal=gpenetration.animal".
+       " WHERE gpenetration.id=$latestid";
      $latestpendata=mysqli_query($dbcnx, $sql);
      $latestrow=mysqli_fetch_array($latestpendata);
      
@@ -288,7 +288,7 @@ if ($pendatarows>0) {
    $ecoordinates="";
    
    $addedby=$userid;
-   $sql="SELECT * FROM gPenetration WHERE animal='$animal' AND pendate='$pendate' AND training=2";
+   $sql="SELECT * FROM gpenetration WHERE animal='$animal' AND pendate='$pendate' AND training=2";
    $pendata = mysqli_query($dbcnx, $sql);
    if (mysqli_num_rows($pendata)>0) {
      $penrow=mysqli_fetch_array($pendata);
@@ -333,7 +333,7 @@ echo(" <input type=\"hidden\" name=\"penid\" value=\"$penid\">\n");
 echo(" <input type=\"hidden\" name=\"bkmk\" value=\"$bkmk\">\n");
 
 echo("<table border=0 cellpadding=3 cellspacing=0>\n");
-$animaldata = mysqli_query($dbcnx, "SELECT DISTINCT animal FROM gAnimal ORDER BY animal");
+$animaldata = mysqli_query($dbcnx, "SELECT DISTINCT animal FROM ganimal ORDER BY animal");
 echo("<tr><td>Animal:</td><td><select name=\"animal\" size=\"1\">");
 if ($animal == "All") {
     $sel=" selected";

@@ -12,7 +12,7 @@ include_once "./celldb.php";
 if (!isset($id)) {
   $id=-1;
 }
-$table="oCompany";
+$table="ocompany";
 if (!isset($refpage)) {
   $refpage="order_companies.php";
 }

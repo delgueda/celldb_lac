@@ -25,7 +25,7 @@ if (""==$machinename) {
 }
 if (-2==$complete) {
   $sql="SELECT *,(to_days(lastdate)*3600*24+time_to_sec(lastdate)-to_days(startdate)*3600*24-time_to_sec(startdate)) as duration" .
-    " FROM tQueue" .
+    " FROM tqueue" .
     " WHERE user like \"$user\"" .
     " AND note like \"%$notemask%\"" .
     " AND (machinename like \"$machinename\"" .
@@ -33,7 +33,7 @@ if (-2==$complete) {
     " ORDER BY $orderby";
 } else {
   $sql="SELECT *,(to_days(lastdate)*3600*24+time_to_sec(lastdate)-to_days(startdate)*3600*24-time_to_sec(startdate)) as duration" .
-    " FROM tQueue" .
+    " FROM tqueue" .
     " WHERE user like \"$user\"" .
     " AND note like \"%$notemask%\"" .
     " AND (machinename like \"$machinename\"" .
@@ -43,13 +43,13 @@ if (-2==$complete) {
 }
 
 if ("%"==$machinename && ""==$notemask) {
-  $sql="SELECT complete,count(id) as activecount FROM tQueue WHERE user like \"$user\" GROUP BY complete ORDER BY complete";
+  $sql="SELECT complete,count(id) as activecount FROM tqueue WHERE user like \"$user\" GROUP BY complete ORDER BY complete";
 } elseif ("%"==$machinename) {
-  $sql="SELECT complete,count(id) as activecount FROM tQueue WHERE user like \"$user\" AND note like \"%$notemask%\" GROUP BY complete ORDER BY complete";
+  $sql="SELECT complete,count(id) as activecount FROM tqueue WHERE user like \"$user\" AND note like \"%$notemask%\" GROUP BY complete ORDER BY complete";
 } elseif (""==$notemask) {
-  $sql="SELECT complete,count(id) as activecount FROM tQueue WHERE user like \"$user\" AND machinename like \"$machinename\" GROUP BY complete ORDER BY complete";
+  $sql="SELECT complete,count(id) as activecount FROM tqueue WHERE user like \"$user\" AND machinename like \"$machinename\" GROUP BY complete ORDER BY complete";
 } else {
-  $sql="SELECT complete,count(id) as activecount FROM tQueue WHERE user like \"$user\" AND machinename like \"$machinename\" AND note like \"%$notemask%\" GROUP BY complete ORDER BY complete";
+  $sql="SELECT complete,count(id) as activecount FROM tqueue WHERE user like \"$user\" AND machinename like \"$machinename\" AND note like \"%$notemask%\" GROUP BY complete ORDER BY complete";
 }
 
 $activedata=mysqli_query($dbcnx, $sql);
@@ -58,7 +58,7 @@ while ( $row = mysqli_fetch_array($activedata) ) {
   $userjobcount[($row["complete"]+2)]=$row["activecount"];
 }
 
-$sql="SELECT complete,count(id) as activecount FROM tQueue GROUP BY complete ORDER BY complete";
+$sql="SELECT complete,count(id) as activecount FROM tqueue GROUP BY complete ORDER BY complete";
 $activedata=mysqli_query($dbcnx, $sql);
 $jobcount=array(0,0,0,0,0);
 while ( $row = mysqli_fetch_array($activedata) ) {
@@ -77,7 +77,7 @@ for ($ii=1; $ii<count($compstrings); $ii++) {
 }
 echo(" (user/total) -- $userid($seclevel)<br>\n");
 
-$sql="SELECT count(load1) as nodecount,sum(dead) as deadcount,sum(lastoverload * (1-dead)) as oloadcount,sum(maxproc * (1-lastoverload) * (1-dead)) as maxproc,avg(load1) as meanload FROM tComputer WHERE allowqueuemaster in (1,2);";
+$sql="SELECT count(load1) as nodecount,sum(dead) as deadcount,sum(lastoverload * (1-dead)) as oloadcount,sum(maxproc * (1-lastoverload) * (1-dead)) as maxproc,avg(load1) as meanload FROM tcomputer WHERE allowqueuemaster in (1,2);";
 $compdata=mysqli_query($dbcnx, $sql);
 $row = mysqli_fetch_array($compdata);
 
@@ -91,14 +91,14 @@ echo(sprintf("%.2f",$row["meanload"]) . " mean load\n");
 
 echo(" --- ");
 
-$sql="SELECT count(gUserPrefs.id) as usercount" .
-     " FROM gUserPrefs";
+$sql="SELECT count(guserprefs.id) as usercount" .
+     " FROM guserprefs";
 $userdata=mysqli_query($dbcnx, $sql);
 $row = mysqli_fetch_array($userdata);
 $usercount=$row["usercount"];
 
 $sql="SELECT DISTINCT user" .
-     " FROM tQueue" .
+     " FROM tqueue" .
      " WHERE complete=-1 OR complete=0";
 $userdata=mysqli_query($dbcnx, $sql);
 $activeusercount=mysqli_num_rows($userdata);

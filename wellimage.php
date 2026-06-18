@@ -23,12 +23,12 @@ if (!isset($showdata) || !isset($siteid)) {
   $showdata="location";
 }
 if ("location"==$showdata && !isset($siteid)) {
-  $sql="SELECT * FROM gPenetration WHERE id=$penid";
+  $sql="SELECT * FROM gpenetration WHERE id=$penid";
 } else {
-  $sql="SELECT gPenetration.*,bf,area,depth".
-    " FROM gPenetration INNER JOIN gCellMaster".
-    " ON gPenetration.id=gCellMaster.penid".
-    " WHERE gCellMaster.siteid='$siteid'";
+  $sql="SELECT gpenetration.*,bf,area,depth".
+    " FROM gpenetration INNER JOIN gcellmaster".
+    " ON gpenetration.id=gcellmaster.penid".
+    " WHERE gcellmaster.siteid='$siteid'";
 }
 
 $pendata=mysqli_query($dbcnx, $sql);

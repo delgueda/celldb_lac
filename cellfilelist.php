@@ -42,9 +42,9 @@ if ($animal == "All") {
   echo(" <option value=\"All\">All</option>\n");
 }
 if ($exlcudetest) {
-  $animaldata = mysqli_query($dbcnx, "SELECT DISTINCT animal FROM gCellMaster WHERE animal<>\"Test\" ORDER BY animal");
+  $animaldata = mysqli_query($dbcnx, "SELECT DISTINCT animal FROM gcellmaster WHERE animal<>\"Test\" ORDER BY animal");
 } else {
-  $animaldata = mysqli_query($dbcnx, "SELECT DISTINCT animal FROM gCellMaster ORDER BY animal");
+  $animaldata = mysqli_query($dbcnx, "SELECT DISTINCT animal FROM gcellmaster ORDER BY animal");
 }
 while ( $row = mysqli_fetch_array($animaldata) ) {
    if ($animal == $row["animal"]) {
@@ -64,7 +64,7 @@ if (0==$well) {
 } else {
   echo(" <option value=\"0\">All</option>\n");
 }
-$welldata = mysqli_query($dbcnx, "SELECT DISTINCT well FROM gPenetration WHERE well>0 ORDER BY well");
+$welldata = mysqli_query($dbcnx, "SELECT DISTINCT well FROM gpenetration WHERE well>0 ORDER BY well");
 while ( $row = mysqli_fetch_array($welldata) ) {
    if ($well == $row["well"]) {
        $sel=" selected";
@@ -82,7 +82,7 @@ if ($runclassid == -1) {
   echo(" <option value=\"-1\">All</option>");
 }
 $runclassdata=mysqli_query($dbcnx, "SELECT DISTINCT id,name" .
-                          " FROM gRunClass ORDER BY name,id");
+                          " FROM grunclass ORDER BY name,id");
 while ( $row = mysqli_fetch_array($runclassdata) ) {
    if ($runclassid == $row["id"]) {
        $sel=" selected";
@@ -113,19 +113,19 @@ echo("</FORM><br>");
 $swhere="";
 
 if (""!=$animal && $animal!="All") {
-  $swhere=$swhere . " AND gCellMaster.animal=\"$animal\"";
+  $swhere=$swhere . " AND gcellmaster.animal=\"$animal\"";
 }
 if ($well>0) {
-  $swhere=$swhere . " AND gCellMaster.well=$well";
+  $swhere=$swhere . " AND gcellmaster.well=$well";
 }
 if (""!=$runclassid && $runclassid>=0) {
-  $swhere=$swhere . " AND gDataRaw.runclassid=$runclassid";
+  $swhere=$swhere . " AND gdataraw.runclassid=$runclassid";
 }
 if ($stimspeedid>0) {
-  $swhere=$swhere . " AND gDataRaw.stimspeedid=$stimspeedid";
+  $swhere=$swhere . " AND gdataraw.stimspeedid=$stimspeedid";
 }
 if (""!=$cellid) {
-  $swhere=$swhere . " AND gCellMaster.cellid like \"" . $cellid. "%\"";
+  $swhere=$swhere . " AND gcellmaster.cellid like \"" . $cellid. "%\"";
 }
 if (""!=$orderby) {
   $sorder=" $orderby,";
@@ -133,15 +133,15 @@ if (""!=$orderby) {
 if (""==$behavior || "all"==$behavior) {
   // do nothing
 } elseif ("training"==$behavior) {
-  $swhere=$swhere . " AND gDataRaw.training=1";
+  $swhere=$swhere . " AND gdataraw.training=1";
 } elseif ("all physiology"==$behavior) {
-  $swhere=$swhere . " AND gDataRaw.training=0";
+  $swhere=$swhere . " AND gdataraw.training=0";
 } else {
-  $swhere=$swhere." AND gDataRaw.training=0 AND gDataRaw.behavior='$behavior'";
+  $swhere=$swhere." AND gdataraw.training=0 AND gdataraw.behavior='$behavior'";
 }
 
 if ($excludetest) {
-  $swhere=$swhere . " AND not(gCellMaster.animal like 'test')";
+  $swhere=$swhere . " AND not(gcellmaster.animal like 'test')";
 }
 
 // if no parameters passed, search returns nothing 
@@ -150,14 +150,14 @@ if (""==$swhere) {
   $swhere=" AND 0";
 }
 
-$rawsql="SELECT gDataRaw.*,gPenetration.pendate,gCellMaster.penid,".
-     " gCellMaster.area,gCellMaster.animal".
-     " FROM gDataRaw, gCellMaster, gPenetration" . 
-     " WHERE gDataRaw.masterid=gCellMaster.id" .
-     " AND gPenetration.id=gCellMaster.penid" .
-     " AND gDataRaw.bad=0" .
+$rawsql="SELECT gdataraw.*,gpenetration.pendate,gcellmaster.penid,".
+     " gcellmaster.area,gcellmaster.animal".
+     " FROM gdataraw, gcellmaster, gpenetration" . 
+     " WHERE gdataraw.masterid=gcellmaster.id" .
+     " AND gpenetration.id=gcellmaster.penid" .
+     " AND gdataraw.bad=0" .
      $swhere .
-     " ORDER BY $sorder gCellMaster.animal,gDataRaw.id";
+     " ORDER BY $sorder gcellmaster.animal,gdataraw.id";
 //echo("sql: $rawsql<br>\n");
 
 $rawfiledata=mysqli_query($dbcnx, $rawsql);
@@ -172,11 +172,11 @@ $sorturl="<a href=\"demo_page.php?userid=$userid&sessionid=$sessionid&animal=$an
 
 echo("<table>");
 echo("<tr>\n");
-echo("    <td><b>" . $sorturl . "gDataRaw.id\">RID</a></b></td>\n");
-echo("    <td><b>" . $sorturl . "gCellMaster.animal\">Animal</a></b></td>\n");
-echo("    <td><b>" . $sorturl . "gDataRaw.cellid\">SiteID</a></b></td>\n");
-echo("    <td><b>" . $sorturl . "gPenetration.pendate\">Date</a></b></td>\n");
-echo("    <td><b>" . $sorturl . "gDataRaw.runclassid\">Class</a></b></td>\n");
+echo("    <td><b>" . $sorturl . "gdataraw.id\">RID</a></b></td>\n");
+echo("    <td><b>" . $sorturl . "gcellmaster.animal\">Animal</a></b></td>\n");
+echo("    <td><b>" . $sorturl . "gdataraw.cellid\">SiteID</a></b></td>\n");
+echo("    <td><b>" . $sorturl . "gpenetration.pendate\">Date</a></b></td>\n");
+echo("    <td><b>" . $sorturl . "gdataraw.runclassid\">Class</a></b></td>\n");
 echo("    <td><b>Area</b></td>\n");
 echo("    <td><b>Parameter file</b></td>\n");
 echo("    </tr>\n");

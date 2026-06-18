@@ -1,7 +1,7 @@
 <?php
 
-/// figure out if there is anything stored in gData because this will affect whether other things get displayed
-$sql="SELECT * FROM gData WHERE rawid=$rawid AND parmtype=0 ORDER BY id";
+/// figure out if there is anything stored in gdata because this will affect whether other things get displayed
+$sql="SELECT * FROM gdata WHERE rawid=$rawid AND parmtype=0 ORDER BY id";
 $parmdata=mysqli_query($dbcnx, $sql);
 if (mysqli_num_rows($parmdata)==0) {
   $gdataexists=0;
@@ -33,7 +33,7 @@ if (1 || $training) {
 
 echo("<tr><td>Run class:</td><td><select name=\"runclassid\" $ustr1>");
 $runclassdata=mysqli_query($dbcnx, "SELECT DISTINCT id,name" .
-                          " FROM gRunClass ORDER BY name,id");
+                          " FROM grunclass ORDER BY name,id");
 while ( $row = mysqli_fetch_array($runclassdata) ) {
    if ($runclassid == $row["id"]) {
        $sel=" selected";
@@ -45,7 +45,7 @@ while ( $row = mysqli_fetch_array($runclassdata) ) {
 echo(" </select></td>\n");
 echo("<td></td>\n");
 
-$sql="SELECT DISTINCT stimclass FROM gDataRaw" .
+$sql="SELECT DISTINCT stimclass FROM gdataraw" .
   " WHERE not(isnull(stimclass))" .
   " AND (addedby=\"$userid\" OR cellid=\"$siteid\")" .
   " ORDER BY stimclass";
@@ -63,7 +63,7 @@ while ( $row = mysqli_fetch_array($stimclassdata) ) {
 echo(" </select></td>\n");
 echo("<td>NEW STIMCLASS:</td><td><INPUT TYPE=TEXT SIZE=20 NAME=\"ostimclass\" value=\"$stimclass\"></td></tr>\n");
 
-$sql="SELECT DISTINCT task FROM gDataRaw" .
+$sql="SELECT DISTINCT task FROM gdataraw" .
   " WHERE not(isnull(task))" .
   " AND (addedby=\"$userid\" OR cellid=\"$siteid\")" .
   " ORDER BY task";
@@ -147,7 +147,7 @@ if (!$gdataexists) {
 echo("<tr><td colspan=4><HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE></td></tr>");
 
 //info specific to each cell
-$singledata=mysqli_query($dbcnx, "SELECT * FROM gSingleCell".
+$singledata=mysqli_query($dbcnx, "SELECT * FROM gsinglecell".
                         " WHERE masterid=$masterid".
                         " ORDER BY cellid,id");
 $cellcount=0;
@@ -155,7 +155,7 @@ while ( $row = mysqli_fetch_array($singledata) ) {
   $cellcount=$cellcount+1;
   
   $singleid=$row["id"];
-  $singlerawdata=mysqli_query($dbcnx, "SELECT * FROM gSingleRaw".
+  $singlerawdata=mysqli_query($dbcnx, "SELECT * FROM gsingleraw".
                              " WHERE singleid=$singleid AND rawid=$rawid");
   if (0==mysqli_num_rows($singlerawdata)) {
     $singlerawid=-1;
@@ -175,7 +175,7 @@ while ( $row = mysqli_fetch_array($singledata) ) {
   }
   
   echo("<tr><td>\n");
-  // singleid is gSingleCell.id for this singleraw combo
+  // singleid is gsinglecell.id for this singleraw combo
   echo("<input type=\"hidden\" name=\"singleid[$cellcount]\" value=" . 
        $singleid .">\n");
   echo("<input type=\"hidden\" name=\"singlerawid[$cellcount]\" value=" . 
@@ -251,7 +251,7 @@ if ($gdataexists) {
 
   echo("\n</td><td valign=top>\n\n");
 
-  $sql="SELECT * FROM gData WHERE rawid=$rawid AND parmtype=1 ORDER BY id";
+  $sql="SELECT * FROM gdata WHERE rawid=$rawid AND parmtype=1 ORDER BY id";
   $parmdata=mysqli_query($dbcnx, $sql);
   echo("<table>\n");
   while ($row=mysqli_fetch_array($parmdata)){

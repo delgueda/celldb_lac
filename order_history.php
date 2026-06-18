@@ -21,15 +21,15 @@ orderheader();
 
 if (isset($itemid)) {
   echo("<p><b>Orders for itemid $itemid:</b></p>\n");
-  $sql="SELECT oOrder.*,oCompany.name as co_name,date(dateordered) as odate FROM oOrder,oCompany,oOrderItem WHERE oOrder.companyid=oCompany.id AND oOrder.id=oOrderItem.orderid AND oOrderItem.itemid=$itemid AND not(oOrder.bad) ORDER BY dateordered;";
+  $sql="SELECT oorder.*,ocompany.name as co_name,date(dateordered) as odate FROM oorder,ocompany,oorderitem WHERE oorder.companyid=ocompany.id AND oorder.id=oorderitem.orderid AND oorderitem.itemid=$itemid AND not(oorder.bad) ORDER BY dateordered;";
 
 } elseif (isset($companyid)) {
   echo("<p><b>Orders from company $companyid:</b></p>\n");
-  $sql="SELECT oOrder.*,oCompany.name as co_name,date(dateordered) as odate FROM oOrder,oCompany WHERE oOrder.companyid=oCompany.id AND oOrder.companyid=$companyid AND not(oOrder.bad) ORDER BY dateordered;";
+  $sql="SELECT oorder.*,ocompany.name as co_name,date(dateordered) as odate FROM oorder,ocompany WHERE oorder.companyid=ocompany.id AND oorder.companyid=$companyid AND not(oorder.bad) ORDER BY dateordered;";
 
 } else {
   echo("<p><b>All orders:</b></p>\n");
-  $sql="SELECT oOrder.*,oCompany.name as co_name,date(dateordered) as odate FROM oOrder,oCompany WHERE oOrder.companyid=oCompany.id AND not(oOrder.bad) ORDER BY dateordered;";
+  $sql="SELECT oorder.*,ocompany.name as co_name,date(dateordered) as odate FROM oorder,ocompany WHERE oorder.companyid=ocompany.id AND not(oorder.bad) ORDER BY dateordered;";
 }
 
 $cdata=mysqli_query($dbcnx, $sql);

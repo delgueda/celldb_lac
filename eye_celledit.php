@@ -5,7 +5,7 @@ created 2002 - SVD
 ***/
 
 // userid - string id of user to go in added by
-// masterid - id in gCellMaster
+// masterid - id in gcellmaster
 // action 0 - add file
 //        1 - edit file
 //        2 - do the edit/add and redirect back to cellinfo.php
@@ -13,10 +13,10 @@ created 2002 - SVD
 // global include: connect to db and get important basic info about user prefs
 include_once "./celldb.php";
 
-// if save selected, save posted info to gCellMaster
+// if save selected, save posted info to gcellmaster
 if (2==$action) {
 
-   $sql="SELECT * FROM gCellMaster WHERE id=$masterid";
+   $sql="SELECT * FROM gcellmaster WHERE id=$masterid";
    $celldata = mysqli_query($dbcnx, $sql);
    $celldatarows=mysqli_num_rows($celldata);
    
@@ -34,9 +34,9 @@ if (2==$action) {
    $crap[1]=(int)$crap[1];
    
    if (0==$celldatarows) {
-      // ie, gCellMaster entry doesn't exist yet. create a new
+      // ie, gcellmaster entry doesn't exist yet. create a new
       // entry
-      $sql="INSERT INTO gCellMaster" .
+      $sql="INSERT INTO gcellmaster" .
         " (siteid,cellid,animal,well,area,penid,".
         "depth,umperdepth,findtime,polarity,handplot,comments,".
         "descentnotes,rfppd,rfsize,xoffset,yoffset,eyecal,".
@@ -54,9 +54,9 @@ if (2==$action) {
       $masterid=mysqli_insert_id();
       $newcell="New Cell";
    } else {
-     // gDataRaw entry does exist.  update with posted values
+     // gdataraw entry does exist.  update with posted values
      
-     $sql="UPDATE gCellMaster SET ".
+     $sql="UPDATE gcellmaster SET ".
        "siteid=\"$cellid\",".
        "cellid=\"$cellid\",".
        "animal=\"$animal\",".
@@ -84,7 +84,7 @@ if (2==$action) {
      //       "polarity=\"$polarity\",".
      $result=mysqli_query($dbcnx, $sql);
      
-     $sql="UPDATE gDataRaw SET " .
+     $sql="UPDATE gdataraw SET " .
        "cellid=\"$cellid\"" .
        " WHERE masterid=$masterid";
      $result=mysqli_query($dbcnx, $sql);
@@ -105,7 +105,7 @@ if (2==$action) {
        $cellid2= $cellid . $channel[$ii] . $unit[$ii];
      }
      
-     $sql="UPDATE gSingleCell SET ".
+     $sql="UPDATE gsinglecell SET ".
        "siteid=\"$cellid\",".
        "cellid=\"$cellid2\",".
        "area=\"" . $area[$ii] . "\",".
@@ -125,7 +125,7 @@ if (2==$action) {
        " WHERE id=" . $singleid[$ii];
      $result=mysqli_query($dbcnx, $sql);
      
-     $sql="UPDATE gSingleRaw SET ".
+     $sql="UPDATE gsingleraw SET ".
        "cellid=\"$cellid2\",".
        "masterid=$masterid,".
        "penid=$penid,".
@@ -138,7 +138,7 @@ if (2==$action) {
    }
    
    if (""!=$newcell) {
-     $sql="INSERT INTO gSingleCell" .
+     $sql="INSERT INTO gsinglecell" .
        " (siteid,cellid,area,penid,masterid,addedby,info)" .
        " VALUES (\"$cellid\",\"$cellid\",\"$area[$cellcount]\",$penid,".
        "$masterid,\"$addedby\",\"$siteinfo\")";
@@ -146,18 +146,18 @@ if (2==$action) {
      $singleid=mysqli_insert_id();
      //echo("$sql<br>");
      
-     $sql="UPDATE gSingleCell set singleid=$singleid WHERE id=$singleid";
+     $sql="UPDATE gsinglecell set singleid=$singleid WHERE id=$singleid";
      $result=mysqli_query($dbcnx, $sql);
      //echo("$sql<br>");
      //exit;
      
-     // create a gSingleRaw entry for new cell matched to every 
-     // existing gDataRaw entry
-     $sql="SELECT id FROM gDataRaw WHERE masterid=$masterid";
+     // create a gsingleraw entry for new cell matched to every 
+     // existing gdataraw entry
+     $sql="SELECT id FROM gdataraw WHERE masterid=$masterid";
      $masterdata=mysqli_query($dbcnx, $sql);
      while ($masterrow=mysqli_fetch_array($masterdata)) {
        $rawid=$masterrow["id"];
-       $sql="INSERT INTO gSingleRaw" .
+       $sql="INSERT INTO gsingleraw" .
          " (cellid,masterid,singleid,penid,rawid,".
          "addedby,info)" .
          " VALUES (\"$cellid\",$masterid," . $singleid . ",$penid,".
@@ -169,7 +169,7 @@ if (2==$action) {
    }
    
    // save last* to userprefs so that celllist shows the new cell
-   $userdata = mysqli_query($dbcnx, "UPDATE gUserPrefs SET lastanimal=\"$animal\", lastwell=$well WHERE userid=\"$userid\"");
+   $userdata = mysqli_query($dbcnx, "UPDATE guserprefs SET lastanimal=\"$animal\", lastwell=$well WHERE userid=\"$userid\"");
 
    if (""==$goback) {
      header("Location: $fncelledit?userid=$userid&sessionid=$sessionid&bkmk=$bkmk&masterid=$masterid&action=1");
@@ -179,9 +179,9 @@ if (2==$action) {
    exit;                 /* Make sure that code below does not execute */
 }
 
-// load data about the cell from gCellMaster
+// load data about the cell from gcellmaster
 if (""!=$masterid and $masterid>-1) {
-   $celldata = mysqli_query($dbcnx, "SELECT * FROM gCellMaster WHERE id=$masterid");
+   $celldata = mysqli_query($dbcnx, "SELECT * FROM gcellmaster WHERE id=$masterid");
    $rowcount=mysqli_num_rows($celldata);
    if ($rowcount==0) {
       $masterid=-1;
@@ -228,19 +228,19 @@ if ($masterid>-1) {
    }
    
    if ($penid<=0) {
-      $sql="SELECT max(id) as maxid FROM gPenetration WHERE animal=\"$animal\"";
+      $sql="SELECT max(id) as maxid FROM gpenetration WHERE animal=\"$animal\"";
       $pendata=mysqli_query($dbcnx, $sql);
       $row=mysqli_fetch_array($pendata);
       $penid=$row["maxid"];
    }
    
-   $sql="SELECT * FROM gPenetration WHERE id=$penid";
+   $sql="SELECT * FROM gpenetration WHERE id=$penid";
    $pendata=mysqli_query($dbcnx, $sql);
    $row=mysqli_fetch_array($pendata);
    $training=$row["training"];
    
    // figure out defaults using last entry for that critter
-   $sql="SELECT max(id) as maxid FROM gCellMaster WHERE animal=\"$animal\"" .
+   $sql="SELECT max(id) as maxid FROM gcellmaster WHERE animal=\"$animal\"" .
      " AND training=$training";
    $latestcelldata=mysqli_query($dbcnx, $sql);
    $row=mysqli_fetch_array($latestcelldata);
@@ -250,7 +250,7 @@ if ($masterid>-1) {
      $lastcellid=sprintf("%st0000",substr($animal,0,1));
    
    } else {
-     $sql="SELECT * FROM gCellMaster WHERE id=$latestid";
+     $sql="SELECT * FROM gcellmaster WHERE id=$latestid";
      $latestcelldata=mysqli_query($dbcnx, $sql);
      $latestrow=mysqli_fetch_array($latestcelldata);
      $lastcellid=$latestrow["cellid"];
@@ -285,7 +285,7 @@ if ($masterid>-1) {
    $addedby=$userid;
 }
 
-$runclassdata=mysqli_query($dbcnx, "SELECT DISTINCT id,name FROM gRunClass ORDER BY id");
+$runclassdata=mysqli_query($dbcnx, "SELECT DISTINCT id,name FROM grunclass ORDER BY id");
 
 ?>
 <HTML>
@@ -314,7 +314,7 @@ echo(" <input type=\"hidden\" name=\"bkmk\" value=$bkmk>\n");
 echo("<table>\n");
 
 // animal dropdown
-$animaldata = mysqli_query($dbcnx, "SELECT DISTINCT animal FROM gCellMaster ORDER BY animal");
+$animaldata = mysqli_query($dbcnx, "SELECT DISTINCT animal FROM gcellmaster ORDER BY animal");
 echo("<tr><td colspan=4><HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE></td></tr>\n");
 echo("<tr><td>Animal:</td><td><select name=\"animal\" size=\"1\">");
 if ($animal == "All") {
@@ -334,7 +334,7 @@ while ( $row = mysqli_fetch_array($animaldata) ) {
 echo(" </select></td>\n");
 
 // pentration dropdown
-$pendata = mysqli_query($dbcnx, "SELECT DISTINCT id,penname FROM gPenetration" .
+$pendata = mysqli_query($dbcnx, "SELECT DISTINCT id,penname FROM gpenetration" .
                        " WHERE animal=\"$animal\" AND well=$well ORDER BY penname");
 echo("<td>Pen/Well:</td><td><select name=\"penid\" size=\"1\">");
 if ($penid <= 0) {
@@ -381,7 +381,7 @@ echo("<td>Crap</td><td>Handplot\n");
 echo("<INPUT TYPE=SUBMIT VALUE=\"Save\"><INPUT TYPE=SUBMIT NAME=\"newcell\" VALUE=\"New Cell\"></td>\n");
 
 //info specific to each cell
-$singledata=mysqli_query($dbcnx, "SELECT * FROM gSingleCell".
+$singledata=mysqli_query($dbcnx, "SELECT * FROM gsinglecell".
                         " WHERE masterid=$masterid" .
                         " ORDER BY id");
 $cellcount=0;

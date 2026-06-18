@@ -19,7 +19,7 @@ include_once "./celldb.php";
 <?php
 orderheader();
 
-$sql="SELECT * FROM oCompany WHERE not(bad) ORDER BY name;";
+$sql="SELECT * FROM ocompany WHERE not(bad) ORDER BY name;";
 $cdata=mysqli_query($dbcnx, $sql);
 
 echo("<table cellpadding=2>\n");

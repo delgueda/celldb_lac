@@ -61,8 +61,8 @@ $chart->setLeftLegend(5);                       // Left Legend
 $chart->setXlabel($timeframe);
 
 // set criteria to match query specs
-$fromstr="FROM tEvent";
-$datefield="tEvent.eventdate";
+$fromstr="FROM tevent";
+$datefield="tevent.eventdate";
 
 if ("hour"==$timeframe) {
   $datevar="date_format($datefield,\"%k\") as tm";
@@ -101,23 +101,23 @@ while ( $row = mysqli_fetch_array($userdata) ) {
     $selstr="SELECT sum(code=4) as rc1," .
       " sum((user=\"$uid\") * (code=4)) as rc2,".
       " min(eventdate) as mindate,";
-    $wheresup="AND tEvent.code=4";
+    $wheresup="AND tevent.code=4";
   } elseif ("Killed Jobs"==$statcode) {
     $selstr="SELECT sum(code=5) as rc1," .
       " sum((user=\"$uid\") * (code=5)) as rc2,".
       " min(eventdate) as mindate,";
-    $wheresup="AND tEvent.code=5";
+    $wheresup="AND tevent.code=5";
   } elseif ("Mean Minutes per Job"==$statcode) {
-    $selstr="SELECT count(tEvent.id) as rc1," .
-      " sum(((TO_DAYS(tE2.eventdate)-TO_DAYS(tEvent.eventdate))*86400+".
-      "       TIME_TO_SEC(tE2.eventdate)-TIME_TO_SEC(tEvent.eventdate)) *".
-      "     (tEvent.user=\"$uid\")) /".
-      " (sum(tEvent.user=\"$uid\"))/60 + 0 as rc2,".
-      "sum(tEvent.user=\"$uid\") as rc3,".
-      " min(tEvent.eventdate) as mindate,";
-    $fromstr="FROM tEvent INNER JOIN tEvent tE2".
-      " ON (tEvent.queueid=tE2.queueid AND tEvent.computerid=tE2.computerid)" ;
-    $wheresup="AND tEvent.code=2 AND tE2.code=3 AND tE2.eventdate>tEvent.eventdate";
+    $selstr="SELECT count(tevent.id) as rc1," .
+      " sum(((TO_DAYS(tE2.eventdate)-TO_DAYS(tevent.eventdate))*86400+".
+      "       TIME_TO_SEC(tE2.eventdate)-TIME_TO_SEC(tevent.eventdate)) *".
+      "     (tevent.user=\"$uid\")) /".
+      " (sum(tevent.user=\"$uid\"))/60 + 0 as rc2,".
+      "sum(tevent.user=\"$uid\") as rc3,".
+      " min(tevent.eventdate) as mindate,";
+    $fromstr="FROM tevent INNER JOIN tevent tE2".
+      " ON (tevent.queueid=tE2.queueid AND tevent.computerid=tE2.computerid)" ;
+    $wheresup="AND tevent.code=2 AND tE2.code=3 AND tE2.eventdate>tevent.eventdate";
   } elseif ("Active Nodes"==$statcode) {
     $selstr="SELECT sum(code=11) as rc1," .
       " sum((queueid) * (code=11))/sum(code=11) as rc2,".

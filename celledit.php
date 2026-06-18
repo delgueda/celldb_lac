@@ -5,9 +5,9 @@ created 2002 - SVD
 ***/
 
 // userid - string id of user to go in added by
-// masterid - id in gCellMaster
+// masterid - id in gcellmaster
 // action 0 - nothing
-//        2 - edit/add gCellMaster entry
+//        2 - edit/add gcellmaster entry
 
 // global include: connect to db and get important basic info about user prefs
 $min_sec_level=6;
@@ -17,7 +17,7 @@ $errormsg="";
 
 
 
-// if save selected, save posted info to gCellMaster
+// if save selected, save posted info to gcellmaster
 if (2==$action) {
   
   if (-1==$masterid) {
@@ -44,7 +44,7 @@ if (2==$action) {
   }
 
   // actually save/update the data
-  $errormsg=savedata("gCellMaster",$masterid,$formdata);
+  $errormsg=savedata("gcellmaster",$masterid,$formdata);
   
   
   if (is_numeric($errormsg)) {
@@ -56,12 +56,12 @@ if (2==$action) {
  }
 
 if (2==$action && $masterid>-1) {
-  $sql="UPDATE gDataRaw SET cellid=\"$cellid\"" .
+  $sql="UPDATE gdataraw SET cellid=\"$cellid\"" .
     " WHERE masterid=$masterid";
   $result=mysqli_query($dbcnx, $sql);
 
-  $sql="SELECT gPenetration.* FROM gPenetration, gCellMaster".
-    " WHERE gPenetration.id=gCellMaster.penid AND gCellMaster.id=$masterid";
+  $sql="SELECT gpenetration.* FROM gpenetration, gcellmaster".
+    " WHERE gpenetration.id=gcellmaster.penid AND gcellmaster.id=$masterid";
   $pendata = mysqli_query($dbcnx, $sql);
   if ($penrow=mysqli_fetch_array($pendata)) {
     $numchans=$penrow["numchans"];
@@ -104,9 +104,9 @@ if (2==$action && $masterid>-1) {
     if (isset($yoffset)) { $singdata["yoffset"]=(int)$yoffset[$ii]; }
     if (isset($quality)) { $singdata["quality"]=$quality[$ii]; }
     
-    $errormsg=savedata("gSingleCell",$singleid[$ii],$singdata);
+    $errormsg=savedata("gsinglecell",$singleid[$ii],$singdata);
     
-    $sql="UPDATE gSingleRaw SET ".
+    $sql="UPDATE gsingleraw SET ".
       "cellid=\"" . $singdata["cellid"] . "\",".
       "masterid=$masterid,".
       "penid=$penid,".
@@ -131,7 +131,7 @@ if (2==$action && $masterid>-1) {
       $newunit=max($unit)+1;
     }
     
-    $sql="INSERT INTO gSingleCell" .
+    $sql="INSERT INTO gsinglecell" .
       " (siteid,cellid,area,penid,masterid,channum,unit,addedby,info)" .
       " VALUES (\"$cellid\",\"$cellid\",\"".$area[$newchannum]."\",$penid,".
       "$masterid,$newchannum,$newunit,\"$addedby\",\"$siteinfo\")";
@@ -139,13 +139,13 @@ if (2==$action && $masterid>-1) {
     $singleid=mysqli_insert_id();
     //echo("$sql<br>");
     
-    // create a gSingleRaw entry for new cell matched to every 
-    // existing gDataRaw entry
-    $sql="SELECT id FROM gDataRaw WHERE masterid=$masterid";
+    // create a gsingleraw entry for new cell matched to every 
+    // existing gdataraw entry
+    $sql="SELECT id FROM gdataraw WHERE masterid=$masterid";
     $masterdata=mysqli_query($dbcnx, $sql);
     while ($masterrow=mysqli_fetch_array($masterdata)) {
       $rawid=$masterrow["id"];
-      $sql="INSERT INTO gSingleRaw" .
+      $sql="INSERT INTO gsingleraw" .
         " (cellid,masterid,singleid,penid,rawid,channum,unit,".
         "addedby,info)" .
         " VALUES (\"$cellid\",$masterid,$singleid,$penid,$rawid," .
@@ -157,7 +157,7 @@ if (2==$action && $masterid>-1) {
   }
   
   // save last* to userprefs so that celllist shows the new cell
-  $userdata = mysqli_query($dbcnx, "UPDATE gUserPrefs SET lastanimal=\"$animal\", lastwell=$well WHERE userid=\"$userid\"");
+  $userdata = mysqli_query($dbcnx, "UPDATE guserprefs SET lastanimal=\"$animal\", lastwell=$well WHERE userid=\"$userid\"");
   
   if (""==$goback) {
     header("Location: $fncelledit?userid=$userid&sessionid=$sessionid&bkmk=$bkmk&masterid=$masterid&action=1");
@@ -167,9 +167,9 @@ if (2==$action && $masterid>-1) {
   exit;                 /* Make sure that code below does not execute */
  }
 
-// load data about the cell from gCellMaster
+// load data about the cell from gcellmaster
 if (""!=$masterid and $masterid>-1) {
-   $celldata = mysqli_query($dbcnx, "SELECT * FROM gCellMaster WHERE id=$masterid");
+   $celldata = mysqli_query($dbcnx, "SELECT * FROM gcellmaster WHERE id=$masterid");
    $rowcount=mysqli_num_rows($celldata);
    if ($rowcount==0) {
       $masterid=-1;
@@ -211,7 +211,7 @@ if ($masterid>-1) {
    $addedby=$masterdata["addedby"];
    $lastmod=$masterdata["lastmod"];
    
-   $sql="SELECT * FROM gPenetration WHERE id=$penid";
+   $sql="SELECT * FROM gpenetration WHERE id=$penid";
    $pendata=mysqli_query($dbcnx, $sql);
    $row=mysqli_fetch_array($pendata);
    $numchans=$row["numchans"];
@@ -223,7 +223,7 @@ if ($masterid>-1) {
     $errormsg="penid not specified";
   }
   
-  $sql="SELECT * FROM gPenetration WHERE id=$penid";
+  $sql="SELECT * FROM gpenetration WHERE id=$penid";
   $pendata=mysqli_query($dbcnx, $sql);
   $row=mysqli_fetch_array($pendata);
   $animal=$row["animal"];
@@ -238,7 +238,7 @@ if ($masterid>-1) {
   // kludge for compatibility with all lab naming schemes
   if ("eye"==$view) {
     // vision labs: base siteid on last siteid
-    $sql="SELECT max(id) as maxid FROM gCellMaster WHERE animal=\"$animal\"" .
+    $sql="SELECT max(id) as maxid FROM gcellmaster WHERE animal=\"$animal\"" .
       " AND training=$training";
     $latestcelldata=mysqli_query($dbcnx, $sql);
     $row=mysqli_fetch_array($latestcelldata);
@@ -248,7 +248,7 @@ if ($masterid>-1) {
       $lastcellid=sprintf("%st0000",substr($animal,0,1));
       
     } else {
-      $sql="SELECT * FROM gCellMaster WHERE id=$latestid";
+      $sql="SELECT * FROM gcellmaster WHERE id=$latestid";
       $latestcelldata=mysqli_query($dbcnx, $sql);
       $latestrow=mysqli_fetch_array($latestcelldata);
       $lastcellid=$latestrow["cellid"];
@@ -266,7 +266,7 @@ if ($masterid>-1) {
   } else {
 
     // auditory labs: base siteid on penname
-    $sql="SELECT max(id) as maxid FROM gCellMaster WHERE penid=$penid";
+    $sql="SELECT max(id) as maxid FROM gcellmaster WHERE penid=$penid";
     $latestcelldata=mysqli_query($dbcnx, $sql);
     $row=mysqli_fetch_array($latestcelldata);
     $latestid=$row["maxid"];
@@ -277,7 +277,7 @@ if ($masterid>-1) {
       $lastletter=chr(ord("a")-1);
       
     } else {
-      $sql="SELECT * FROM gCellMaster WHERE id=$latestid";
+      $sql="SELECT * FROM gcellmaster WHERE id=$latestid";
       $latestcelldata=mysqli_query($dbcnx, $sql);
       $latestrow=mysqli_fetch_array($latestcelldata);
       $lastcellid=$latestrow["cellid"];
@@ -306,7 +306,7 @@ if ($masterid>-1) {
  }
 
 $runclassdata=mysqli_query($dbcnx, "SELECT DISTINCT id,name".
-                          " FROM gRunClass ORDER BY id");
+                          " FROM grunclass ORDER BY id");
 
 ?>
 <HTML>

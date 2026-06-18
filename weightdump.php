@@ -20,7 +20,7 @@ include_once "./celldb.php";
 echo("<BODY bgcolor=\"$userbg\" text=\"$userfg\"" .
      " link=\"$linkfg\" vlink=\"$vlinkfg\" alink=\"$alinkfg\">");
 
-$sql="SELECT * FROM gHealth WHERE weight>0 AND animal='$animal' ORDER BY date";
+$sql="SELECT * FROM ghealth WHERE weight>0 AND animal='$animal' ORDER BY date";
 $wdata=mysqli_query($dbcnx, $sql);
 
 echo("<table>\n");

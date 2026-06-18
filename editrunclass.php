@@ -24,7 +24,7 @@ if (0==$action && (""==$name || ""==$details)) {
   $action=-1;
 }
 if (0==$action) {
-  $sql="SELECT * FROM gRunClass WHERE name=\"$name\"";
+  $sql="SELECT * FROM grunclass WHERE name=\"$name\"";
   $adata=mysqli_query($dbcnx, $sql);
   if (mysqli_num_rows($adata)>0) {
     $errormsg="ERROR: Run class already exists with the requested abbreviation.";
@@ -34,7 +34,7 @@ if (0==$action) {
 
 // ok, checks done. perform actions
 if (0==$action) {
-  $sql="INSERT INTO gRunClass" .
+  $sql="INSERT INTO grunclass" .
     " (name,details,task,stimclass,".
     "addedby,info)" .
     " VALUES (\"$name\",\"$details\",\"$task\",\"$stimclass\",".
@@ -42,7 +42,7 @@ if (0==$action) {
   $result=mysqli_query($dbcnx, $sql);
  } elseif (1==$action) {
    // edit
-   $sql="UPDATE gRunClass SET ".
+   $sql="UPDATE grunclass SET ".
      "name=\"$name\",".
      "details=\"$details\",".
      "task=\"$task\",".
@@ -52,7 +52,7 @@ if (0==$action) {
    
  } elseif (2==$action) {
    // delete
-   $sql="DELETE FROM gRunClass SET ".
+   $sql="DELETE FROM grunclass SET ".
      " WHERE id=$id";
    $result=mysqli_query($dbcnx, $sql);
 
@@ -84,7 +84,7 @@ if (""!=$errormsg) {
   echo("<p><b><font color=\"#CC0000\">$errormsg</font></b></p>\n");
 }
 
-$sql="SELECT * FROM gRunClass ORDER BY id";
+$sql="SELECT * FROM grunclass ORDER BY id";
 $namedata = mysqli_query($dbcnx, $sql);
 
 echo("<table>");

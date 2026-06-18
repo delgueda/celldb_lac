@@ -38,7 +38,7 @@ if (""!=$errormsg) {
   echo("<p><b><font color=\"#CC0000\">$errormsg</font></b></p>\n");
 }
 
-$bmaxdata=mysqli_query($dbcnx, "SELECT max(id) as maxid FROM sBatch");
+$bmaxdata=mysqli_query($dbcnx, "SELECT max(id) as maxid FROM sbatch");
 if ($row=mysqli_fetch_array($bmaxdata)) {
   $maxid=$row["maxid"];
 }
@@ -70,14 +70,14 @@ echo(" - <a href=\"batchinfo.php?show=edit&batchid=$batchid\">edit</a>");
 echo(" - <a href=\"batchinfo.php?show=cells&batchid=$batchid\">cells</a>");
 echo("</FORM>");
 
-$batchdata=mysqli_query($dbcnx, "SELECT * FROM sBatch where id=".$batchid);
+$batchdata=mysqli_query($dbcnx, "SELECT * FROM sbatch where id=".$batchid);
 
 if (""==$sortcell) {
   $narfdata=mysqli_query($dbcnx, "SELECT modelname,count(id) as count,".
                         " round(avg(r_test),3) as rmean,".
                         " round(avg(n_parms),0) as nparms,".
                         " round(avg(r_ceiling),3) as rceiling".
-                        " FROM NarfResults".
+                        " FROM narfresults".
                         " WHERE batch=$batchid".
                         " AND modelname like '%$modelmask%'".
                         " GROUP BY modelname ORDER BY count DESC,rmean DESC");
@@ -86,7 +86,7 @@ if (""==$sortcell) {
                         " round(avg(r_test),3) as rmean,".
                         " round(avg(n_parms),0) as nparms,".
                         " round(avg(r_ceiling),3) as rceiling".
-                        " FROM NarfResults".
+                        " FROM narfresults".
                         " WHERE batch=$batchid".
                         " AND cellid='$sortcell'".
                         " AND modelname like '%$modelmask%'".
@@ -138,17 +138,17 @@ if ("summ"==$show) {
 
   echo("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n");
   if (""==$sortmodel) {
-    $celldata=mysqli_query($dbcnx, "SELECT cellid FROM sRunData WHERE batch=$batchid ORDER BY cellid");
+    $celldata=mysqli_query($dbcnx, "SELECT cellid FROM srundata WHERE batch=$batchid ORDER BY cellid");
   } else {
-    $celldata=mysqli_query($dbcnx, "SELECT cellid FROM NarfResults WHERE batch=$batchid AND modelname='".$sortmodel."' ORDER BY r_test DESC");
+    $celldata=mysqli_query($dbcnx, "SELECT cellid FROM narfresults WHERE batch=$batchid AND modelname='".$sortmodel."' ORDER BY r_test DESC");
   }
   
   while ($row=mysqli_fetch_array($narfdata)) {
-    $batchdata=mysqli_query($dbcnx, "SELECT NarfResults.cellid,".
-                           " round(NarfResults.r_test,3) as r".
-                           " FROM NarfResults".
-                           " WHERE NarfResults.modelname='".$row["modelname"]."'".
-                           " AND NarfResults.batch=$batchid ORDER BY cellid");
+    $batchdata=mysqli_query($dbcnx, "SELECT narfresults.cellid,".
+                           " round(narfresults.r_test,3) as r".
+                           " FROM narfresults".
+                           " WHERE narfresults.modelname='".$row["modelname"]."'".
+                           " AND narfresults.batch=$batchid ORDER BY cellid");
     echo("  <tr><td><a href=\"?show=cells&batchid=$batchid&modelmask=".
          urlencode($modelmask)."&sortmodel=".urlencode($row["modelname"]).
          "\">". $row["modelname"] . "</a></td>\n");
@@ -195,12 +195,12 @@ if ("summ"==$show) {
   if ($row = mysqli_fetch_array($batchdata)) {
     echo("Batch $batchid - ".$row["name"]." - ".$row["details"]."<br>");
   }
-  $sql="SELECT sRunData.*,gCellMaster.penid,sResults.matstr,sResults.lastmod".
-                       " FROM (sRunData INNER JOIN gCellMaster".
-                       " ON sRunData.masterid=gCellMaster.id)".
-                       " LEFT JOIN sResults ON sRunData.id=sResults.runid".
-                       " WHERE sRunData.batch=".$batchid.
-    " ORDER BY sRunData.cellid";
+  $sql="SELECT srundata.*,gcellmaster.penid,sresults.matstr,sresults.lastmod".
+                       " FROM (srundata INNER JOIN gcellmaster".
+                       " ON srundata.masterid=gcellmaster.id)".
+                       " LEFT JOIN sresults ON srundata.id=sresults.runid".
+                       " WHERE srundata.batch=".$batchid.
+    " ORDER BY srundata.cellid";
   
   $rundata=mysqli_query($dbcnx, $sql);
   

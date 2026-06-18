@@ -39,21 +39,21 @@ echo("Table creation complete ($res).<br>\n");
 
 echo("Creating test database entries...<br>\n");
 
-$sql="INSERT INTO gAnimal (animal,cellprefix,notes,addedby,species,lab)".
+$sql="INSERT INTO ganimal (animal,cellprefix,notes,addedby,species,lab)".
   " VALUES ('Test','tst','General behavior/experiment notes here',".
   "'admin','ferret','$LAB')";
 echo("$sql<br>");
 mysqli_query($dbcnx, $sql);
 
-$sql="INSERT INTO gAnimal (animal,cellprefix,notes,addedby,species,lab)".
+$sql="INSERT INTO ganimal (animal,cellprefix,notes,addedby,species,lab)".
   " VALUES ('TestMouse','tsm','General behavior/experiment notes here',".
   "'admin','mouse','$LAB')";
 mysqli_query($dbcnx, $sql);
 
-$res=exec("mysql -u".$dbuser." -p".$dbpassword." ".$dbname." < gRunClass.sql");
+$res=exec("mysql -u".$dbuser." -p".$dbpassword." ".$dbname." < grunclass.sql");
 
 $sessionid=md5('Ferret1');
-$sql="INSERT INTO gUserPrefs" .
+$sql="INSERT INTO guserprefs" .
   " (userid,password,seclevel,email,realname,lab)".
   " VALUES (\"david\",\"" . 
   "$sessionid\",2,\"stephen.v.david@gmail.com\",\"Stephen David\",".

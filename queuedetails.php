@@ -4,7 +4,7 @@
 include_once "./celldb.php";
 
 if (""==$orderby) {
-  $orderby="tQueue.id";
+  $orderby="tqueue.id";
 }
 if (""==$complete && ""==$lastjobcomplete) {
   $complete=-1;
@@ -18,7 +18,7 @@ if (""==$user && ""==$lastjobuser) {
 }
 
 if (""!=$userid) {
-  $sql="UPDATE gUserPrefs" .
+  $sql="UPDATE guserprefs" .
     " SET lastjobuser=\"$user\", " .
     " lastjobcomplete=$complete" .
     " WHERE userid=\"$userid\"";
@@ -26,7 +26,7 @@ if (""!=$userid) {
 }
 
 if (0!=$action && $target>0) {
-  $sql="SELECT * FROM tQueue WHERE id=$target";
+  $sql="SELECT * FROM tqueue WHERE id=$target";
   $queuedata=mysqli_query($dbcnx, $sql);
   
   if (0==mysqli_num_rows($queuedata)) {
@@ -39,11 +39,11 @@ if (0!=$action && $target>0) {
     // check requested action and make sure user has permission
     if (-1==$action && ($seclevel>=5 || $row["user"]==$userid)) {
       //echo("Removing queue id $target<br>");
-      $sql="DELETE FROM tQueue WHERE id=$target";
+      $sql="DELETE FROM tqueue WHERE id=$target";
       $compdata=mysqli_query($dbcnx, $sql);
     } elseif (1==$action) {
       //echo("Reseting queue id $target<br>");
-      $sql="UPDATE tQueue SET complete=0 WHERE id=$target";
+      $sql="UPDATE tqueue SET complete=0 WHERE id=$target";
       $compdata=mysqli_query($dbcnx, $sql);
     } else {
       //echo("Insufficient security level for requested action<br>");
@@ -82,7 +82,7 @@ if (""==$qid) {
   $qid=0;
 }
 
-$sql="SELECT * FROM tQueue" .
+$sql="SELECT * FROM tqueue" .
     " WHERE id=$qid";
 //echo("sql: $sql<br>\n");
 $queuedata=mysqli_query($dbcnx, $sql);
@@ -195,7 +195,7 @@ echo("</table>\n");
 
 echo("<HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE>");
 
-$sql="SELECT *,TIME_TO_SEC(NOW())-TIME_TO_SEC(daemonclick) as sec_ago FROM tGlobalData";
+$sql="SELECT *,TIME_TO_SEC(NOW())-TIME_TO_SEC(daemonclick) as sec_ago FROM tglobaldata";
 $globaldata=mysqli_query($dbcnx, $sql);
 $row=mysqli_fetch_array($globaldata);
 echo("<em>Queuemaster host:</em> " . $row["daemonhost"] .

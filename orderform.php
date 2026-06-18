@@ -374,7 +374,7 @@ td
 <body link=blue vlink=purple>
 
 <?php
-$sql="SELECT * FROM oOrder WHERE id=$id";
+$sql="SELECT * FROM oorder WHERE id=$id";
 $odata=mysqli_query($dbcnx, $sql);
 if ($drow=mysqli_fetch_array($odata)) {
   $newrow=0;
@@ -385,7 +385,7 @@ if ($drow=mysqli_fetch_array($odata)) {
   $shippingprice=$drow["shippingprice"];
   $addedby=$drow["addedby"];
   
-  $sql="SELECT * FROM oCompany WHERE id=$companyid";
+  $sql="SELECT * FROM ocompany WHERE id=$companyid";
   $cdata=mysqli_query($dbcnx, $sql);
   $crow=mysqli_fetch_array($cdata);
   
@@ -402,14 +402,14 @@ if ($drow=mysqli_fetch_array($odata)) {
   $ccontactemail=$crow["contactemail"];
   $caccountnumber=$crow["accountnumber"];
   
-  $sql="SELECT * FROM gUserPrefs WHERE userid=\"$addedby\"";
+  $sql="SELECT * FROM guserprefs WHERE userid=\"$addedby\"";
   $udata=mysqli_query($dbcnx, $sql);
   $urow=mysqli_fetch_array($udata);
   
   $labname=$urow["realname"];
   $labemail=$urow["email"];
 
-  $sql="SELECT oOrderItem.*,oItem.name,oItem.productnumber,oItem.units FROM oOrderItem,oItem WHERE oOrderItem.itemid=oItem.id AND oOrderItem.orderid=$id";
+  $sql="SELECT oorderitem.*,oitem.name,oitem.productnumber,oitem.units FROM oorderitem,oitem WHERE oorderitem.itemid=oitem.id AND oorderitem.orderid=$id";
   $idata=mysqli_query($dbcnx, $sql);
   
 } else {
@@ -438,14 +438,14 @@ if ($drow=mysqli_fetch_array($odata)) {
  </tr>
  <tr height=17 style='height:12.75pt'>
   <td height=17 style='height:12.75pt' x:str="Vendor:  ">Vendor:<span
-  style='mso-spacerun:yes'>  </span></td>
+  style='mso-spacerun:yes'></span></td>
   <td class=xl25><?php echo($cname); ?></td>
   <td class=xl24>Date:</td>
   <td colspan=3 class=xl56><?php echo($dateordered); ?></td>
  </tr>
  <tr height=22 style='mso-height-source:userset;height:16.5pt'>
   <td height=22 style='height:16.5pt' x:str="Address: ">Address:<span
-  style='mso-spacerun:yes'> </span></td>
+  style='mso-spacerun:yes'></span></td>
   <td class=xl28 style='border-top:none'><?php echo($caddress1); ?></td>
   <td class=xl24>PO# :</td>
   <td colspan=3 class=xl58>&nbsp;</td>
@@ -463,27 +463,27 @@ if ($drow=mysqli_fetch_array($odata)) {
  </tr>
  <tr height=21 style='mso-height-source:userset;height:15.75pt'>
   <td height=21 style='height:15.75pt' x:str="Phone No:  ">Phone No:<span
-  style='mso-spacerun:yes'>  </span></td>
+  style='mso-spacerun:yes'></span></td>
   <td class=xl28 style='border-top:none'><?php echo($cphone);?></td>
   <td colspan=5 class=xl24>University of Maryland - ISR</td>
  </tr>
  <tr height=22 style='mso-height-source:userset;height:16.5pt'>
   <td height=22 style='height:16.5pt' x:str="Fax No: ">Fax No:<span
-  style='mso-spacerun:yes'> </span></td>
+  style='mso-spacerun:yes'></span></td>
   <td class=xl28 style='border-top:none'><?php echo($cfax); ?></td>
-  <td colspan=5 class=xl24>Room 2164<span style='mso-spacerun:yes'>   
+  <td colspan=5 class=xl24>Room 2164<span style='mso-spacerun:yes'>
   </span>Bldg. 0115</td>
  </tr>
  <tr height=22 style='mso-height-source:userset;height:16.5pt'>
   <td height=22 style='height:16.5pt'>Acct. No:</td>
   <td class=xl48 style='border-top:none'><?php echo($caccountnumber); ?></td>
-  <td colspan=5 class=xl24>College Park, MD<span style='mso-spacerun:yes'> 
+  <td colspan=5 class=xl24>College Park, MD<span style='mso-spacerun:yes'>
   </span>20742</td>
  </tr>
  <tr height=22 style='mso-height-source:userset;height:16.5pt'>
   <td height=22 style='height:16.5pt'>URL:</td>
   <td class=xl28 style='border-top:none'><?php echo($curl); ?></td>
-  <td colspan=5 class=xl24><?php echo($labname); ?><span style='mso-spacerun:yes'> 
+  <td colspan=5 class=xl24><?php echo($labname); ?><span style='mso-spacerun:yes'>
   </span>x5-6596</td>
  </tr>
  <tr height=17 style='height:12.75pt'>
@@ -491,7 +491,7 @@ if ($drow=mysqli_fetch_array($odata)) {
  </tr>
  <tr height=17 style='height:12.75pt'>
   <td height=17 class=xl39 colspan=2 style='height:12.75pt;mso-ignore:colspan'>NOTE:<span
-  style='mso-spacerun:yes'>  </span>THE UNIVERSITY OF MARYLAND IS EXEMPT FROM
+  style='mso-spacerun:yes'> </span>THE UNIVERSITY OF MARYLAND IS EXEMPT FROM
   THE FOLLOWING TAXES:</td>
   <td colspan=5 class=xl54>Please Send Invoices and Receipts to:</td>
  </tr>
@@ -516,8 +516,8 @@ if ($drow=mysqli_fetch_array($odata)) {
  <tr height=17 style='height:12.75pt'>
   <td colspan=2 height=17 class=xl54 style='height:12.75pt'
   x:str="The following numbers must appear on all related ">The following
-  numbers must appear on all related<span style='mso-spacerun:yes'> </span></td>
-  <td colspan=5 class=xl24>College Park, MD<span style='mso-spacerun:yes'> 
+  numbers must appear on all related<span style='mso-spacerun:yes'></span></td>
+  <td colspan=5 class=xl24>College Park, MD<span style='mso-spacerun:yes'>
   </span>20742</td>
  </tr>
  <tr height=17 style='height:12.75pt'>
@@ -529,8 +529,8 @@ if ($drow=mysqli_fetch_array($odata)) {
  </tr>
  <tr height=20 style='mso-height-source:userset;height:15.0pt'>
   <td height=20 colspan=2 style='height:15.0pt;mso-ignore:colspan'>FRS#:<span
-  style='mso-spacerun:yes'>   </span><?php echo($frs);?><span
-  style='mso-spacerun:yes'>  </span>REQ#:<span style='mso-spacerun:yes'> 
+  style='mso-spacerun:yes'> </span><?php echo($frs);?><span
+  style='mso-spacerun:yes'> </span>REQ#:<span style='mso-spacerun:yes'>
   </span>______________<span style='display:none'>_</span></td>
   <td colspan=2 class=xl24></td>
   <td colspan=2 class=xl51></td>
@@ -655,11 +655,11 @@ while ($irow=mysqli_fetch_array($idata)) {  ?>
   <td class=xl33>&nbsp;</td>
   <td></td>
   <td class=xl32 colspan=2 style='mso-ignore:colspan;border-right:.5pt solid black'>Order
-  By:<span style='mso-spacerun:yes'>  </span>______________</td>
+  By:<span style='mso-spacerun:yes'> </span>______________</td>
  </tr>
  <tr height=17 style='height:12.75pt'>
   <td height=17 class=xl32 style='height:12.75pt'><span
-  style='mso-spacerun:yes'> </span></td>
+  style='mso-spacerun:yes'></span></td>
   <td></td>
   <td class=xl33>&nbsp;</td>
   <td></td>
@@ -672,7 +672,7 @@ while ($irow=mysqli_fetch_array($idata)) {  ?>
   <td class=xl33>&nbsp;</td>
   <td></td>
   <td class=xl32 colspan=2 style='mso-ignore:colspan;border-right:.5pt solid black'>Date
-  Ordered:<span style='mso-spacerun:yes'>  </span>____________</td>
+  Ordered:<span style='mso-spacerun:yes'> </span>____________</td>
  </tr>
  <tr height=17 style='height:12.75pt'>
   <td height=17 class=xl32 style='height:12.75pt'>&nbsp;</td>

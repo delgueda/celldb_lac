@@ -25,21 +25,21 @@ if (""!=$userid) {
   } else {
     $lastwell=$well;
   }
-  $userdata = mysqli_query($dbcnx, "UPDATE gUserPrefs SET lastanimal=\"$animal\", lastwell=$lastwell, lasttraining=$recstat WHERE userid=\"$userid\"");
+  $userdata = mysqli_query($dbcnx, "UPDATE guserprefs SET lastanimal=\"$animal\", lastwell=$lastwell, lasttraining=$recstat WHERE userid=\"$userid\"");
 }
 
 // generate sql statement to retrieve appropriate penetratioins
 if ("cells"==$showdata) {
-	$sql1start="SELECT gPenetration.penname as gpenname,".
-		"gPenetration.id as gpenid," .
-		"gPenetration.animal as ganimal," .
-		"gPenetration.well as gwell," .
-		"gPenetration.etudeg as getudeg," .
-		"gCellMaster.*" .
-		" FROM gPenetration LEFT JOIN gCellMaster" .
-		" ON gPenetration.id=gCellMaster.penid WHERE ";
+	$sql1start="SELECT gpenetration.penname as gpenname,".
+		"gpenetration.id as gpenid," .
+		"gpenetration.animal as ganimal," .
+		"gpenetration.well as gwell," .
+		"gpenetration.etudeg as getudeg," .
+		"gcellmaster.*" .
+		" FROM gpenetration LEFT JOIN gcellmaster" .
+		" ON gpenetration.id=gcellmaster.penid WHERE ";
 } else {
-	$sql1start="SELECT * FROM gPenetration WHERE";
+	$sql1start="SELECT * FROM gpenetration WHERE";
 }
 
 // load cells that fit well/animal filter criteria
@@ -51,14 +51,14 @@ if (""==$orderby) {
 if ("All"==$animal) {
   $sanimal="1";
 } elseif ("my"==$animal) {
-  $sanimal="gPenetration.addedby=\"" . $userid . "\"";
+  $sanimal="gpenetration.addedby=\"" . $userid . "\"";
 } else {
-  $sanimal="gPenetration.animal=\"" . $animal . "\"";
+  $sanimal="gpenetration.animal=\"" . $animal . "\"";
 }
 if (0==$well) {
   $swell="1";
 } elseif ($well>0) {
-  $swell="gPenetration.well=" . $well;
+  $swell="gpenetration.well=" . $well;
 } else {
   $mm=date("m");
   $dd=date("d");
@@ -73,24 +73,24 @@ if (0==$well) {
     $firststamp=mktime(0,0,0,$mm,$dd-30,$yy);
   }
   $firstdate=date("Y-m-d",$firststamp);
-  $swell="gPenetration.pendate>=\"" . $firstdate . "\"";
+  $swell="gpenetration.pendate>=\"" . $firstdate . "\"";
 }
 
 if (2==$recstat) {
-  $strain="gPenetration.training in (0,1) ";
+  $strain="gpenetration.training in (0,1) ";
 } elseif (1==$recstat) {
-  $strain="gPenetration.training=1 ";
+  $strain="gpenetration.training=1 ";
 } else {
-  $strain="gPenetration.training=0 ";
+  $strain="gpenetration.training=0 ";
 }
 
 $sql ="$sql1start $sanimal AND $swell AND $strain ORDER BY $tob";
 $celldata = mysqli_query($dbcnx, $sql);
 
 if ("All"==$animal || "my"==$animal || ""==$animal) {
-  $welldata = mysqli_query($dbcnx, "SELECT DISTINCT well FROM gPenetration WHERE well>0 ORDER BY well");
+  $welldata = mysqli_query($dbcnx, "SELECT DISTINCT well FROM gpenetration WHERE well>0 ORDER BY well");
 } else {
-  $welldata = mysqli_query($dbcnx, "SELECT DISTINCT well FROM gPenetration WHERE animal=\"$animal\" AND well>0 ORDER BY well");
+  $welldata = mysqli_query($dbcnx, "SELECT DISTINCT well FROM gpenetration WHERE animal=\"$animal\" AND well>0 ORDER BY well");
 }
 
 if (0) {
@@ -123,7 +123,7 @@ echo("</p>\n");
 echo("<HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE>\n");
 
 echo("<p>");
-$animaldata = mysqli_query($dbcnx, "SELECT animal FROM gAnimal ORDER BY animal");
+$animaldata = mysqli_query($dbcnx, "SELECT animal FROM ganimal ORDER BY animal");
 echo("Who: ");
 echo("<select OnChange=\"location.href=this.options[this.selectedIndex].value\">\n");
 if ($animal == "All") {
@@ -232,10 +232,10 @@ $reorderlink="animalhistory.php?userid=$userid&sessionid=$sessionid" .
   "&animal=$animal&recstat=$recstat&well=$well&showdata=$showdata&orderby=";
 if ("cells"==$showdata) {
    echo("<tr><td><b>Well</b></td><td><b>Penetration</b></td>\n");
-   if ($orderby=="gCellMaster.siteid") {
-      echo("    <td><b><a href=\"" . $reorderlink . "gCellMaster.siteid+DESC\">Site</a></b></td>\n");
+   if ($orderby=="gcellmaster.siteid") {
+      echo("    <td><b><a href=\"" . $reorderlink . "gcellmaster.siteid+DESC\">Site</a></b></td>\n");
    } else {
-      echo("    <td><b><a href=\"" . $reorderlink . "gCellMaster.siteid\">Site</a></b></td>\n");
+      echo("    <td><b><a href=\"" . $reorderlink . "gcellmaster.siteid\">Site</a></b></td>\n");
    }
    if ("eye"==$view) {
      echo("    <td><b>Area/RF</b></td></tr>\n");
@@ -312,7 +312,7 @@ while ( $row = mysqli_fetch_array($celldata) ) {
         }
         echo("&nbsp;</td>\n");
       } elseif (0==$row["training"]) {
-        $sql="SELECT count(id) as filecount FROM gDataRaw WHERE masterid=" . 
+        $sql="SELECT count(id) as filecount FROM gdataraw WHERE masterid=" . 
           $row["id"];
         $filedata=mysqli_query($dbcnx, $sql);
         $frow=mysqli_fetch_array($filedata);
@@ -334,10 +334,10 @@ while ( $row = mysqli_fetch_array($celldata) ) {
     echo("   <td>" . $row["water"] . "</td>\n");
     echo("   <td>" . $row["weight"] . "</td>\n");
     
-    $sql="SELECT count(gDataRaw.id) as filecount," .
-      " sum(gDataRaw.corrtrials) as corrcount, sum(gDataRaw.trials) as trialcount".
-      " FROM gDataRaw,gCellMaster" .
-      " WHERE gCellMaster.penid=$penid AND gDataRaw.masterid=gCellMaster.id";
+    $sql="SELECT count(gdataraw.id) as filecount," .
+      " sum(gdataraw.corrtrials) as corrcount, sum(gdataraw.trials) as trialcount".
+      " FROM gdataraw,gcellmaster" .
+      " WHERE gcellmaster.penid=$penid AND gdataraw.masterid=gcellmaster.id";
     $filedata=mysqli_query($dbcnx, $sql);
     $frow=mysqli_fetch_array($filedata);
     $trialcount=$frow["trialcount"];

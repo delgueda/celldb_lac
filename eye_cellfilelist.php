@@ -14,35 +14,35 @@ echo( "<p><b>$siteinfo Preprocessed data query</b></p>\n" );
 $swhere="";
 
 if (""!=$animal && $animal!="All") {
-  $swhere=$swhere . " AND gCellMaster.animal=\"$animal\"";
+  $swhere=$swhere . " AND gcellmaster.animal=\"$animal\"";
 }
 if ($well>0) {
-  $swhere=$swhere . " AND gCellMaster.well=$well";
+  $swhere=$swhere . " AND gcellmaster.well=$well";
 }
 if (""!=$runclassid && $runclassid>=0) {
-  $swhere=$swhere . " AND gDataRaw.runclassid=$runclassid";
+  $swhere=$swhere . " AND gdataraw.runclassid=$runclassid";
 }
 if ($stimspeedid>0) {
-  $swhere=$swhere . " AND gDataRaw.stimspeedid=$stimspeedid";
+  $swhere=$swhere . " AND gdataraw.stimspeedid=$stimspeedid";
 }
 if (""!=$cellid) {
-  $swhere=$swhere . " AND gSingleCell.cellid like \"" . $cellid. "%\"";
+  $swhere=$swhere . " AND gsinglecell.cellid like \"" . $cellid. "%\"";
 }
 if (""!=$area) {
-  $swhere=$swhere . " AND gSingleCell.area = \"" . $area . "\"";
+  $swhere=$swhere . " AND gsinglecell.area = \"" . $area . "\"";
 }
 if (""!=$orderby) {
   $sorder=" $orderby,";
 }
 
-$rawsql="SELECT gDataRaw.*,gSingleCell.cellid as scellid,".
-     "gSingleCell.penid,gSingleCell.area".
-     " FROM gDataRaw, gCellMaster, gSingleCell" . 
-     " WHERE gDataRaw.masterid=gSingleCell.masterid" .
-     " AND gDataRaw.masterid=gCellMaster.id" .
-     " AND gDataRaw.bad=0" .
+$rawsql="SELECT gdataraw.*,gsinglecell.cellid as scellid,".
+     "gsinglecell.penid,gsinglecell.area".
+     " FROM gdataraw, gcellmaster, gsinglecell" . 
+     " WHERE gdataraw.masterid=gsinglecell.masterid" .
+     " AND gdataraw.masterid=gcellmaster.id" .
+     " AND gdataraw.bad=0" .
      $swhere .
-     " ORDER BY $sorder gCellMaster.animal,gDataRaw.cellid,gDataRaw.id";
+     " ORDER BY $sorder gcellmaster.animal,gdataraw.cellid,gdataraw.id";
 //echo("sql: $rawsql<br>\n");
 
 $rawfiledata=mysqli_query($dbcnx, $rawsql);
@@ -58,7 +58,7 @@ if ($animal == "All") {
 } else {
   echo(" <option value=\"All\">All</option>\n");
 }
-$animaldata = mysqli_query($dbcnx, "SELECT DISTINCT animal FROM gCellMaster ORDER BY animal");
+$animaldata = mysqli_query($dbcnx, "SELECT DISTINCT animal FROM gcellmaster ORDER BY animal");
 while ( $row = mysqli_fetch_array($animaldata) ) {
    if ($animal == $row["animal"]) {
        $sel=" selected";
@@ -70,7 +70,7 @@ while ( $row = mysqli_fetch_array($animaldata) ) {
 echo("</select>\n");
 
 echo("Well: <select name=\"well\" size=\"1\">\n");
-$welldata = mysqli_query($dbcnx, "SELECT DISTINCT well FROM gPenetration ORDER BY well");
+$welldata = mysqli_query($dbcnx, "SELECT DISTINCT well FROM gpenetration ORDER BY well");
 while ( $row = mysqli_fetch_array($welldata) ) {
    if ($well == $row["well"]) {
        $sel=" selected";
@@ -105,7 +105,7 @@ if ($runclassid == -1) {
   echo(" <option value=\"-1\">All</option>");
 }
 $runclassdata=mysqli_query($dbcnx, "SELECT DISTINCT id,name" .
-                          " FROM gRunClass ORDER BY id");
+                          " FROM grunclass ORDER BY id");
 while ( $row = mysqli_fetch_array($runclassdata) ) {
    if ($runclassid == $row["id"]) {
        $sel=" selected";
@@ -122,7 +122,7 @@ if ($stimspeedid == 0) {
 } else {
   echo(" <option value=\"0\">All</option>");
 }
-$speeddata=mysqli_query($dbcnx, "SELECT DISTINCT stimspeedid FROM gDataRaw" .
+$speeddata=mysqli_query($dbcnx, "SELECT DISTINCT stimspeedid FROM gdataraw" .
                        " WHERE stimspeedid>0 ORDER BY stimspeedid DESC");
 while ( $row = mysqli_fetch_array($speeddata) ) {
    if ($stimspeedid == $row["stimspeedid"]) {
@@ -140,7 +140,7 @@ if ("" == $area) {
 } else {
   echo(" <option value=\"\">All</option>");
 }
-$areadata=mysqli_query($dbcnx, "SELECT DISTINCT area FROM gSingleCell" .
+$areadata=mysqli_query($dbcnx, "SELECT DISTINCT area FROM gsinglecell" .
                        " ORDER BY area");
 while ( $row = mysqli_fetch_array($areadata) ) {
    if ($area==$row["area"]) {
@@ -159,7 +159,7 @@ if ($stimfmtcode == 0) {
   echo(" <option value=\"-1\">All</option>");
 }
 $fmtdata=mysqli_query($dbcnx, "SELECT DISTINCT stimfmtcode,stimfilefmt".
-                     " FROM sCellFile" .
+                     " FROM scellfile" .
                      " ORDER BY stimfmtcode");
 while ( $row = mysqli_fetch_array($fmtdata) ) {
    if ($stimfmtcode == $row["stimfmtcode"]) {
@@ -186,12 +186,12 @@ $sorturl="<a href=\"$fncellfilelist?userid=$userid&sessionid=$sessionid&animal=$
 
 echo("<table>");
 echo("<tr>\n");
-echo("    <td><b>" . $sorturl . "gDataRaw.id\">RID</a></b><br></td>\n");
+echo("    <td><b>" . $sorturl . "gdataraw.id\">RID</a></b><br></td>\n");
 echo("    <td><b>CFID</b></td>\n");
-echo("    <td><b>" . $sorturl . "gDataRaw.cellid\">Cell</a></b><br></td>\n");
-echo("    <td><b>" . $sorturl . "gSingleCell.area\">Area</a></b><br></td>\n");
-echo("    <td><b>" . $sorturl . "gDataRaw.runclassid\">Class</a></b></td>\n");
-echo("    <td><b>" . $sorturl . "gDataRaw.stimspeedid\">Speed</a></b></td>\n");
+echo("    <td><b>" . $sorturl . "gdataraw.cellid\">Cell</a></b><br></td>\n");
+echo("    <td><b>" . $sorturl . "gsinglecell.area\">Area</a></b><br></td>\n");
+echo("    <td><b>" . $sorturl . "gdataraw.runclassid\">Class</a></b></td>\n");
+echo("    <td><b>" . $sorturl . "gdataraw.stimspeedid\">Speed</a></b></td>\n");
 echo("    <td><b>Fmt</b></td>\n");
 echo("    <td><b>Pix</b></td>\n");
 echo("    <td><b>Reps</b></td>\n");
@@ -203,16 +203,16 @@ echo("    </tr>\n");
 while ( $rawrow = mysqli_fetch_array($rawfiledata) ) {
   
   if (""!=$stimfmtcode && $stimfmtcode>-1) {
-    $swhere=" AND sCellFile.stimfmtcode=$stimfmtcode";
+    $swhere=" AND scellfile.stimfmtcode=$stimfmtcode";
   } else{
     $swhere="";
   }
   
-  $sql="SELECT sCellFile.*,gRunClass.name AS runclass" .
-    " FROM sCellFile LEFT JOIN gRunClass" .
-    " ON sCellFile.runclassid=gRunClass.id" .
-    " WHERE sCellFile.cellid='" . $rawrow["scellid"] . "'" .
-    " AND sCellFile.rawid=" . $rawrow["id"] .
+  $sql="SELECT scellfile.*,grunclass.name AS runclass" .
+    " FROM scellfile LEFT JOIN grunclass" .
+    " ON scellfile.runclassid=grunclass.id" .
+    " WHERE scellfile.cellid='" . $rawrow["scellid"] . "'" .
+    " AND scellfile.rawid=" . $rawrow["id"] .
     $swhere .
     " ORDER BY stimfmtcode";
   $cellfiledata=mysqli_query($dbcnx, $sql);
@@ -253,7 +253,7 @@ while ( $rawrow = mysqli_fetch_array($rawfiledata) ) {
   }
   
   if ( 0 == $filecount && $showunproc) {
-    $sql="SELECT gRunClass.name AS runclass FROM gRunClass" .
+    $sql="SELECT grunclass.name AS runclass FROM grunclass" .
       " WHERE id=" . $rawrow["runclassid"];
     $data=mysqli_query($dbcnx, $sql);
     $classrow=mysqli_fetch_array($data);

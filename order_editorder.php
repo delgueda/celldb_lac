@@ -12,7 +12,7 @@ include_once "./celldb.php";
 if (!isset($id)) {
   $id=-1;
 }
-$table="oOrder";
+$table="oorder";
 if (!isset($refpage)) {
   $refpage="order_history.php";
 }
@@ -21,7 +21,7 @@ if (1==$action) {
   $sql="UPDATE $table set bad=1-bad WHERE id=$id";
   mysqli_query($dbcnx, $sql);
 
-  $sql="UPDATE oOrderItem set bad=1-bad WHERE orderid=$id";
+  $sql="UPDATE oorderitem set bad=1-bad WHERE orderid=$id";
   mysqli_query($dbcnx, $sql);
   
   header ("Location: $refpage");
@@ -57,7 +57,7 @@ if (2==$action) {
       $itemdata["note"]=$note[$ii];
       $itemdata["unitprice"]=$unitprice[$ii];
       
-      $errormsg2=savedata("oOrderItem",$itemorderid[$ii],$itemdata);
+      $errormsg2=savedata("oorderitem",$itemorderid[$ii],$itemdata);
     }
     $ii++;
   }
@@ -129,7 +129,7 @@ while ($row=mysqli_fetch_array($tdata)) {
     echo("<td>".$row["Field"]."</td>");
     echo("<td><SELECT NAME=\"".$row["Field"]."\" SIZE=\"1\" OnChange=\"document.editform.submit()\">");
     echo(" <option value=\"-1\"$sel>--</option>");
-    $sql="SELECT * FROM oCompany ORDER BY name";
+    $sql="SELECT * FROM ocompany ORDER BY name";
     $cdata=mysqli_query($dbcnx, $sql);
     while ($crow=mysqli_fetch_array($cdata)) {
       if ($companyid == $crow["id"]) {
@@ -184,12 +184,12 @@ while ($row=mysqli_fetch_array($tdata)) {
   }
 }
 
-$sql="SELECT oOrderItem.*,name,productnumber,units".
-" FROM oOrderItem,oItem WHERE oOrderItem.itemid=oItem.id".
-" AND oOrderItem.orderid=$id";
+$sql="SELECT oorderitem.*,name,productnumber,units".
+" FROM oorderitem,oitem WHERE oorderitem.itemid=oitem.id".
+" AND oorderitem.orderid=$id";
 $idata=mysqli_query($dbcnx, $sql);
 
-$sql="SELECT * FROM oItem WHERE companyid=$companyid";
+$sql="SELECT * FROM oitem WHERE companyid=$companyid";
 $listdata=mysqli_query($dbcnx, $sql);
 
 echo("<tr><td></td><td>");

@@ -9,7 +9,7 @@ if (""==$allowqueuemaster && ""==$lastallowqueuemaster) {
   $allowqueuemaster=$lastallowqueuemaster;
 }
 if (""==$orderby && ""==$lastmachinesort) {
-  $orderby="tComputer.load1";
+  $orderby="tcomputer.load1";
 } elseif (""==$orderby) {
   $orderby=$lastmachinesort;
 }
@@ -17,11 +17,11 @@ if (""==$action) {
   $action=0;
 }
 
-$sql="SELECT * FROM gUserPrefs WHERE userid=\"$userid\"";
+$sql="SELECT * FROM guserprefs WHERE userid=\"$userid\"";
 $userdata=mysqli_query($dbcnx, $sql);
 
 if (""!=$userid && $seclevel>0) {
-  $sql="UPDATE gUserPrefs" .
+  $sql="UPDATE guserprefs" .
     " SET lastmachinesort=\"$orderby\", " .
     " lastallowqueuemaster=$allowqueuemaster" .
     " WHERE userid=\"$userid\"";
@@ -29,7 +29,7 @@ if (""!=$userid && $seclevel>0) {
 }
 
 if ((0!=$action && $target>0) || 21==$action) {
-  $sql="SELECT * FROM tComputer WHERE id=$target";
+  $sql="SELECT * FROM tcomputer WHERE id=$target";
   $compdata=mysqli_query($dbcnx, $sql);
   
   if (0==mysqli_num_rows($compdata) && 21!=$action) {
@@ -58,38 +58,38 @@ if ((0!=$action && $target>0) || 21==$action) {
     // check requested action and make sure user has permission
     if (11<=$action && 18>=$action) {
       //echo("Setting max procs to " . ($action-10) . " for node $target<br>");
-      $sql="UPDATE tComputer SET maxproc=" . ($action-10) ." WHERE id=$target";
+      $sql="UPDATE tcomputer SET maxproc=" . ($action-10) ." WHERE id=$target";
       mysqli_query($dbcnx, $sql);
       dblog("Setting max procs to " . ($action-10) . " for " . 
             $row["name"] . "." . $row["ext"],$userid);
     } elseif (1==$action) {
       //echo("Removing node $target<br>");
-      $sql="UPDATE tComputer SET allowqueuemaster=0,numproc=0 WHERE id=$target";
+      $sql="UPDATE tcomputer SET allowqueuemaster=0,numproc=0 WHERE id=$target";
       mysqli_query($dbcnx, $sql);
       
       // kill active jobs on this machine
       $mname=$row["name"] . "." . $row["ext"];
-      $sql="UPDATE tQueue SET killnow=1 WHERE machinename=\"$mname\"" .
+      $sql="UPDATE tqueue SET killnow=1 WHERE machinename=\"$mname\"" .
         " AND complete=-1";
       mysqli_query($dbcnx, $sql);
       
       dblog("Removed node " . $row["name"] . "." . $row["ext"],$userid);
     } elseif (2==$action) {
       //echo("Added node $target<br>");
-      $sql="UPDATE tComputer SET allowqueuemaster=1,lastoverload=0 WHERE id=$target";
+      $sql="UPDATE tcomputer SET allowqueuemaster=1,lastoverload=0 WHERE id=$target";
       mysqli_query($dbcnx, $sql);
       
       dblog("Added node " . $row["name"] . "." . $row["ext"],$userid);
     } elseif (3==$action) {
       //echo("set node $target conditional<br>");
-      $sql="UPDATE tComputer SET allowqueuemaster=2 WHERE id=$target";
+      $sql="UPDATE tcomputer SET allowqueuemaster=2 WHERE id=$target";
       mysqli_query($dbcnx, $sql);
       
       dblog("Set node " . $row["name"] . "." . $row["ext"] .
             " to conditional",$userid);
     } elseif (4==$action) {
       //echo("set node $target night only<br>");
-      $sql="UPDATE tComputer SET allowqueuemaster=3 WHERE id=$target";
+      $sql="UPDATE tcomputer SET allowqueuemaster=3 WHERE id=$target";
       mysqli_query($dbcnx, $sql);
       
       dblog("Set node " . $row["name"] . "." . $row["ext"] .
@@ -97,30 +97,30 @@ if ((0!=$action && $target>0) || 21==$action) {
     } elseif (5==$action) {
       //echo("edit name/ext/owner: $name/$ext/$owner<br>");
       
-      $sql="UPDATE tComputer SET name=\"$name\",ext=\"$ext\",owner=\"$owner\" WHERE id=$target";
+      $sql="UPDATE tcomputer SET name=\"$name\",ext=\"$ext\",owner=\"$owner\" WHERE id=$target";
       mysqli_query($dbcnx, $sql);
       
       dblog("Set node $target to $name.$ext, owner=$owner",$userid);
     } elseif (6==$action) {
       //echo("edit other computer info<br>");
 
-      $sql="UPDATE tComputer SET hardware=\"$hardware\",os=\"$os\",room=\"$room\",note=\"$note\" WHERE id=$target";
+      $sql="UPDATE tcomputer SET hardware=\"$hardware\",os=\"$os\",room=\"$room\",note=\"$note\" WHERE id=$target";
       mysqli_query($dbcnx, $sql);
       
       dblog("Set node $target to hardware=\"$hardware\",os=\"$os\",room=\"$room\",note=\"$note\"",$userid);
     } elseif (7==$action) {
-      $sql="UPDATE tComputer SET dead=0 WHERE id=$target";
+      $sql="UPDATE tcomputer SET dead=0 WHERE id=$target";
       mysqli_query($dbcnx, $sql);
       
       dblog("Resurrected node " . $row["name"] . "." . $row["ext"],$userid);
     } elseif (8==$action) {
       //echo("Disabling sharing for node $target<br>");
-      $sql="UPDATE tComputer SET allowothers=0,numproc=0 WHERE id=$target";
+      $sql="UPDATE tcomputer SET allowothers=0,numproc=0 WHERE id=$target";
       mysqli_query($dbcnx, $sql);
       
       // kill active jobs of other users on this machine
       $mname=$row["name"] . "." . $row["ext"];
-      $sql="UPDATE tQueue SET killnow=1" .
+      $sql="UPDATE tqueue SET killnow=1" .
         " WHERE machinename=\"$mname\"" .
         " AND complete=-1" .
         " AND not(user=\"" . $row["owner"] . "\")";
@@ -130,19 +130,19 @@ if ((0!=$action && $target>0) || 21==$action) {
       dblog("Disabled sharing for " . $row["name"] . "." . $row["ext"],$userid);
     } elseif (9==$action) {
       //echo("Enabling sharing for node $target<br>");
-      $sql="UPDATE tComputer SET allowothers=1 WHERE id=$target";
+      $sql="UPDATE tcomputer SET allowothers=1 WHERE id=$target";
       mysqli_query($dbcnx, $sql);
       dblog("Disabled sharing for " . $row["name"] . "." . $row["ext"],$userid);
     } elseif (21==$action) {
       //echo("new computer: name/ext/owner= $name/$ext/$owner<br>");
       
-      $sql="INSERT INTO tComputer (name,ext,owner,maxproc,allowqueuemaster) VALUES (\"$name\",\"$ext\",\"$owner\",1,0)";
+      $sql="INSERT INTO tcomputer (name,ext,owner,maxproc,allowqueuemaster) VALUES (\"$name\",\"$ext\",\"$owner\",1,0)";
       mysqli_query($dbcnx, $sql);
       
       dblog("New node: $name.$ext, owner=$owner",$userid);
     } elseif (22==$action) {
       // toggle nocheck status
-      $sql="UPDATE tComputer SET nocheck=1-nocheck WHERE id=$target";
+      $sql="UPDATE tcomputer SET nocheck=1-nocheck WHERE id=$target";
       mysqli_query($dbcnx, $sql);
       
       dblog("Machine " . $row["name"] . "." . $row["ext"] .
@@ -200,7 +200,7 @@ if ($machinename == "%") {
   echo(" <option value=\"$machurl%\">All</option>");
 }
 $machinedata=mysqli_query($dbcnx, "SELECT DISTINCT machinename" .
-                       " FROM tQueue WHERE complete=-1 ORDER BY machinename");
+                       " FROM tqueue WHERE complete=-1 ORDER BY machinename");
 while ( $row = mysqli_fetch_array($machinedata) ) {
    if ($machinename == $row["machinename"]) {
        $sel=" selected";
@@ -254,7 +254,7 @@ echo("</td></tr></table>\n");
 
 // query celldb for queue entries matching search criteria
 
-$sql="SELECT * FROM tComputer" .
+$sql="SELECT * FROM tcomputer" .
      " WHERE allowqueuemaster>=$allowqueuemaster" .
      " AND name like \"$machinename\"" .
      " AND location in (0,3)" .
@@ -277,25 +277,25 @@ $keycount=6;
 echo("<table>");
 
 echo("<tr bgcolor=\"#bbbbff\">\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.id\">id</a></b></td>\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.name\">name</a></b></td>\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.ext\">ext</a></b></td>\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.owner\">owner</a></b></td>\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.allowqueuemaster\">participation</a></b>&nbsp;</td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.id\">id</a></b></td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.name\">name</a></b></td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.ext\">ext</a></b></td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.owner\">owner</a></b></td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.allowqueuemaster\">participation</a></b>&nbsp;</td>\n");
 echo("  <td><b>&nbsp;shr&nbsp;</b></td>\n");
 if (0==$edmode) {
-  echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.numproc DESC\">jobs</a>&nbsp;</td>\n");
-  echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.load1\">load1/15</a></b>&nbsp;</td>\n");
+  echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.numproc DESC\">jobs</a>&nbsp;</td>\n");
+  echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.load1\">load1/15</a></b>&nbsp;</td>\n");
   
   for ($ii=0; $ii<$keycount; $ii++) {
     echo("  <td width=" . ($loadsc-3) . " align=right>" . (($ii+1)*2) . ".0</td>\n");
   }
 } else {
   // specs column headers
-  echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.hardware\">hardware</a></b></td>\n");
-  echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.os\">os</a></b></td>\n");
-  echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.room\">loc</a></b></td>\n");
-  echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.note\">note</a></b></td>\n");
+  echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.hardware\">hardware</a></b></td>\n");
+  echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.os\">os</a></b></td>\n");
+  echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.room\">loc</a></b></td>\n");
+  echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.note\">note</a></b></td>\n");
   echo("  <td></td>\n");
   
 }

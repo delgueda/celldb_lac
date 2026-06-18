@@ -7,7 +7,7 @@ if (""==$allowqueuemaster) {
   $allowqueuemaster=1;
 }
 if (""==$orderby) {
-  $orderby="gUserPrefs.userid";
+  $orderby="guserprefs.userid";
 }
 if (""==$action) {
   $action=0;
@@ -15,7 +15,7 @@ if (""==$action) {
 
 if (0!=$action && $target>0) {
 
-  $sql="SELECT * FROM gUserPrefs WHERE id=$target";
+  $sql="SELECT * FROM guserprefs WHERE id=$target";
   $userdata=mysqli_query($dbcnx, $sql);
   
   if (0==mysqli_num_rows($userdata)) {
@@ -31,7 +31,7 @@ if (0!=$action && $target>0) {
     
     if (1==$action) {
 
-      $sql="UPDATE gUserPrefs SET ";
+      $sql="UPDATE guserprefs SET ";
       if ($newseclevel>0) {
         $sql=$sql."seclevel=$newseclevel,";
       }
@@ -83,13 +83,13 @@ if (0==$activeusers) {
   $b2yes="</b>";
   $b1no="";
   $b2no="";
-  $actstring=" GROUP BY gUserPrefs.userid";
+  $actstring=" GROUP BY guserprefs.userid";
 } else {
   $b1yes="";
   $b2yes="";
   $b1no="<b>";
   $b2no="</b>";
-  $actstring=" WHERE gUserPrefs.lab='$LAB' GROUP BY gUserPrefs.userid";
+  $actstring=" WHERE guserprefs.lab='$LAB' GROUP BY guserprefs.userid";
 }
 
 echo("$b1yes<a href=\"" . $acturl . "0\">Yes</a>$b2yes\n");
@@ -101,7 +101,7 @@ echo("</td></tr></table>\n");
 echo("<table>");
 
 if ($edituserid!="") {
-  $sql="SELECT * FROM gUserPrefs WHERE userid='$edituserid'";
+  $sql="SELECT * FROM guserprefs WHERE userid='$edituserid'";
   $thisuserdata=mysqli_query($dbcnx, $sql);
 
   echo("<tr>\n");
@@ -171,8 +171,8 @@ if ($edituserid!="") {
 
 
 // query celldb for queue entries matching search criteria
-$sql="SELECT gUserPrefs.*,count(gPenetration.id) as pencount".
-  " FROM gUserPrefs LEFT JOIN gPenetration ON gUserPrefs.userid=gPenetration.addedby".
+$sql="SELECT guserprefs.*,count(gpenetration.id) as pencount".
+  " FROM guserprefs LEFT JOIN gpenetration ON guserprefs.userid=gpenetration.addedby".
   $actstring.
   " ORDER BY $orderby";
 //echo("sql: $sql<br>\n");
@@ -188,9 +188,9 @@ $sorturl="celldbusers.php?activeusers=$activeusers&orderby=";
 
 
 echo("<tr bgcolor=\"#bbbbff\">\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "gUserPrefs.id\">id</a></b><br></td>\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "gUserPrefs.userid\">name</a></b><br></td>\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "gUserPrefs.lab\">lab</a></b><br></td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "guserprefs.id\">id</a></b><br></td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "guserprefs.userid\">name</a></b><br></td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "guserprefs.lab\">lab</a></b><br></td>\n");
 echo("</tr>\n");
 
 while ( $row = mysqli_fetch_array($userdata) ) {

@@ -80,7 +80,7 @@ function checkpwd($userid,$passwd,$dbcnx) {
   
   $errormsg="ERROR: Account $userid does not exist or incorrect password.";
   
-  $sql="SELECT * FROM gUserPrefs WHERE userid=\"$userid\"";
+  $sql="SELECT * FROM guserprefs WHERE userid=\"$userid\"";
   $userdata=mysqli_query($dbcnx, $sql);
   if (mysqli_num_rows($userdata) > 0) {
     $row = mysqli_fetch_array($userdata);
@@ -184,7 +184,7 @@ function queuefooter($dbcnx) {
   
   echo("<HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE>");
   
-  $sql="SELECT *,TIME_TO_SEC(NOW())-TIME_TO_SEC(daemonclick) as sec_ago FROM tGlobalData";
+  $sql="SELECT *,TIME_TO_SEC(NOW())-TIME_TO_SEC(daemonclick) as sec_ago FROM tglobaldata";
   $globaldata=mysqli_query($dbcnx, $sql);
   $row=mysqli_fetch_array($globaldata);
   if (120<$row["sec_ago"]) {
@@ -319,7 +319,7 @@ if (!isset($dbserver)) {
 $siteinfo="CELLDB v0.6";
 
 // don't log warnings because SVD is too lazy to pre-declare all variables
-//error_reporting(E_ALL & ~E_NOTICE);
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
 
 // automatically parse html posted variables (i think?)
 //import_request_variables("GP", "");
@@ -329,7 +329,8 @@ extract($_REQUEST);
 //$dbcnx=mysqli_connect($dbserver.":3306",$dbuser,$dbpassword);
 
 // initial db connection needed basically for anything
-$dbcnx=@mysqli_connect($dbserver.":3306",$dbuser,$dbpassword);
+//$dbcnx=@mysqli_connect($dbserver.":3306",$dbuser,$dbpassword);
+$dbcnx=@mysqli_connect($dbserver,$dbuser,$dbpassword,$dbname,3306);
 
 if (!$dbcnx) {
   fatal_error("Could not connect to database server $dbserver (uid=$dbuser, pw=$dbpassword). Make sure settings in <tt>config.php</tt> are valid.");
@@ -374,7 +375,7 @@ if (1==$newaccount) {
     $sessionid=checkpwdold($userid,$passwd,$sessionid);
     $seclevel=0;
     if (""!=$sessionid) {
-      $sql="SELECT * FROM gUserPrefs WHERE userid=\"$userid\"";
+      $sql="SELECT * FROM guserprefs WHERE userid=\"$userid\"";
       $userdata=mysqli_query($dbcnx, $sql);
       if (mysqli_num_rows($userdata) > 0) {
         $row = mysqli_fetch_array($userdata);
@@ -382,7 +383,7 @@ if (1==$newaccount) {
       } else {
         // valid linux account but not in database yet 
         // .. set up with default values
-        $sql="INSERT INTO gUserPrefs (userid,seclevel) values (\"$userid\",2)";
+        $sql="INSERT INTO guserprefs (userid,seclevel) values (\"$userid\",2)";
         mysqli_query($dbcnx, $sql);
         $seclevel=2;
       }
@@ -403,7 +404,7 @@ if ((isset($min_sec_level) && $seclevel<$min_sec_level) ||
 
 $testval=0;
 if (""!=$userid) {
-   $userdata = mysqli_query($dbcnx, "SELECT * FROM gUserPrefs WHERE userid=\"$userid\"");
+   $userdata = mysqli_query($dbcnx, "SELECT * FROM guserprefs WHERE userid=\"$userid\"");
    if ($userrow = mysqli_fetch_array($userdata)) {
      $testval=1;
      if (""==$animal) {
@@ -434,8 +435,8 @@ if (""!=$userid) {
    } elseif ($seclevel>0) {
      $animal="All";
      $well=0;
-     mysqli_query("INSERT INTO gUserPrefs (userid,lastanimal,lastwell) VALUES (\"$userid\",\"$animal\",$well)");
-     $userdata = mysqli_query($dbcnx, "SELECT * FROM gUserPrefs WHERE userid=\"$userid\"");
+     mysqli_query("INSERT INTO guserprefs (userid,lastanimal,lastwell) VALUES (\"$userid\",\"$animal\",$well)");
+     $userdata = mysqli_query($dbcnx, "SELECT * FROM guserprefs WHERE userid=\"$userid\"");
      $userrow=mysqli_fetch_array($userdata);
    }
 } elseif (""==$animal || ""==$well) {
@@ -490,7 +491,7 @@ if ("eye"==$view) {
  function savedata($tablename,$id,$formdata) {
   global $userid;
   
-  // check to see if gDataRaw entry exists yet
+  // check to see if gdataraw entry exists yet
   $sql="SELECT * FROM $tablename WHERE id=$id";
   $rawfiledata = mysqli_query($GLOBALS['dbcnx'], $sql);
   $rawfilerows=mysqli_num_rows($rawfiledata);

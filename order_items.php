@@ -19,7 +19,7 @@ include_once "./celldb.php";
 <?php
 orderheader();
 
-$sql="SELECT oItem.*,oCompany.name as co_name FROM oItem,oCompany WHERE oItem.companyid=oCompany.id AND not(oItem.bad) ORDER BY oItem.name;";
+$sql="SELECT oitem.*,ocompany.name as co_name FROM oitem,ocompany WHERE oitem.companyid=ocompany.id AND not(oitem.bad) ORDER BY oitem.name;";
 $cdata=mysqli_query($dbcnx, $sql);
 
 echo("<table cellpadding=2>\n");

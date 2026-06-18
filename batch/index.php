@@ -28,9 +28,9 @@ if (""!=$errormsg) {
   echo("<p><b><font color=\"#CC0000\">$errormsg</font></b></p>\n");
 }
 
-$sql="SELECT sBatch.*,max(NarfResults.id) as lastrun".
-  " FROM sBatch LEFT JOIN NarfResults ON sBatch.id=NarfResults.batch".
-  " GROUP BY sBatch.id ORDER BY lastrun DESC";
+$sql="SELECT sbatch.*,max(narfresults.id) as lastrun".
+  " FROM sbatch LEFT JOIN narfresults ON sbatch.id=narfresults.batch".
+  " GROUP BY sbatch.id ORDER BY lastrun DESC";
 $batchdata=mysqli_query($dbcnx, $sql);
 
 echo("<table>\n");

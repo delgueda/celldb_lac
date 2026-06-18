@@ -26,7 +26,7 @@ A:hover {color: #AA0000; text-decoration: underline}
 
 if (1==$action) {
   // "delete" this account
-  $sql="UPDATE gUserPrefs SET bad=1-bad WHERE id=$uid";
+  $sql="UPDATE guserprefs SET bad=1-bad WHERE id=$uid";
   mysqli_query($dbcnx, $sql);
 }
 
@@ -46,7 +46,7 @@ if (2==$action && (""==$realname)) {
   $action=0;
 }
 if (2==$action) {
-  $sql="SELECT * FROM gUserPrefs WHERE userid=\"$userid\" AND not(isnull(password))";
+  $sql="SELECT * FROM guserprefs WHERE userid=\"$userid\" AND not(isnull(password))";
   $userdata=mysqli_query($dbcnx, $sql);
   if (mysqli_num_rows($userdata)>0) {
     $errormsg="ERROR: Account already exists with the requested userid.";
@@ -61,11 +61,11 @@ if (2==$action) {
   
   // create a new entry in the user table
   $sessionid=md5($passwd);
-  $sql="SELECT * FROM gUserPrefs WHERE userid=\"$userid\"";
+  $sql="SELECT * FROM guserprefs WHERE userid=\"$userid\"";
   $userdata=mysqli_query($dbcnx, $sql);
   
   if (mysqli_num_rows($userdata)>0) {
-    $sql="UPDATE gUserPrefs" .
+    $sql="UPDATE guserprefs" .
       " SET password=\"$sessionid\",".
       " seclevel=6,".
       " email=\"" . tidystr($email) . "\",".
@@ -76,7 +76,7 @@ if (2==$action) {
     $row=mysqli_fetch_array($userdata);
     $uid=$row["id"];
   } else {
-    $sql="INSERT INTO gUserPrefs" .
+    $sql="INSERT INTO guserprefs" .
       " (userid,password,seclevel,email,realname,lab)".
       " VALUES (\"" . tidystr($userid) . "\",\"" . 
       "$sessionid\",6,\"" . tidystr($email) . "\",\"$realname\",".

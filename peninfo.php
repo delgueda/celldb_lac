@@ -24,10 +24,10 @@ if (!isset($bkmk))  {
 
 // load data pre-existing data about the penetration -- if it exists
 if (-1==$penid or ""==$penid) {
-   $sql="SELECT * FROM gPenetration WHERE penname=\"$penname\"";
+   $sql="SELECT * FROM gpenetration WHERE penname=\"$penname\"";
 } else {
    // see if penid exists
-   $sql="SELECT * FROM gPenetration WHERE id=$penid";
+   $sql="SELECT * FROM gpenetration WHERE id=$penid";
 }
 
 $pendata = mysqli_query($dbcnx, $sql);
@@ -58,17 +58,17 @@ echo("<BODY bgcolor=\"$userbg\" text=\"$userfg\"" .
 $redirurl="$fnpeninfo?penname=$penname&bkmk=$bkmk&expand=$expand";
 echo("<meta http-equiv=\"Refresh\" content=\"30; URL=$redirurl\">\n");
 
-$sql="SELECT max(penname) as penname FROM gPenetration WHERE pendate<=\"$pendate\" AND penname<\"$penname\" AND animal=\"$animal\" AND training=$training";
+$sql="SELECT max(penname) as penname FROM gpenetration WHERE pendate<=\"$pendate\" AND penname<\"$penname\" AND animal=\"$animal\" AND training=$training";
 $prevpendata=mysqli_query($dbcnx, $sql);
 $tpenrow=mysqli_fetch_array($prevpendata);
 $prevpenname=$tpenrow["penname"];
 //echo($sql);
-$sql="SELECT min(penname) as penname FROM gPenetration WHERE pendate>=\"$pendate\" AND penname>\"$penname\" AND animal=\"$animal\" AND training=$training";
+$sql="SELECT min(penname) as penname FROM gpenetration WHERE pendate>=\"$pendate\" AND penname>\"$penname\" AND animal=\"$animal\" AND training=$training";
 $nextpendata=mysqli_query($dbcnx, $sql);
 $tpenrow=mysqli_fetch_array($nextpendata);
 $nextpenname=$tpenrow["penname"];
 //echo($sql);
-$sql="SELECT max(penname) as penname FROM gPenetration WHERE animal=\"$animal\" AND training=$training";
+$sql="SELECT max(penname) as penname FROM gpenetration WHERE animal=\"$animal\" AND training=$training";
 $lastpendata=mysqli_query($dbcnx, $sql);
 $tpenrow=mysqli_fetch_array($lastpendata);
 $lastpenname=$tpenrow["penname"];
@@ -101,9 +101,9 @@ if (""!=$nextpenname && $lastpenname!=$nextpenname) {
 }
 echo("</p>\n");
 
-$sql="SELECT round(weight,0) as weight,round(water,1) as water" .    " FROM gHealth INNER JOIN gAnimal ON gHealth.animal_id=gAnimal.id" .
-   " WHERE gAnimal.animal='".$penrow["animal"] . "'" .  
-   " AND gHealth.date='". $penrow["pendate"] . "'"; 
+$sql="SELECT round(weight,0) as weight,round(water,1) as water" .    " FROM ghealth INNER JOIN ganimal ON ghealth.animal_id=ganimal.id" .
+   " WHERE ganimal.animal='".$penrow["animal"] . "'" .  
+   " AND ghealth.date='". $penrow["pendate"] . "'"; 
 $hdata=mysqli_query($dbcnx, $sql); 
 
 echo("<table cellpadding=1>\n");
@@ -178,7 +178,7 @@ if ($expand=="pendetails") {
 }
 
 // find sites associated with this penetration
-$celldata = mysqli_query($dbcnx, "SELECT * FROM gCellMaster WHERE penid=$penid" .
+$celldata = mysqli_query($dbcnx, "SELECT * FROM gcellmaster WHERE penid=$penid" .
                         " ORDER BY cellid, id");
 echo("<tr><td valign=top><b>Sites:</b></td><td colspan=\"3\">");
 while ( $cellrow = mysqli_fetch_array($celldata) ) {
@@ -190,7 +190,7 @@ echo("</table>" );
 
 
 // load cells associated with this penetration
-$celldata = mysqli_query($dbcnx, "SELECT * FROM gCellMaster WHERE penid=$penid" .
+$celldata = mysqli_query($dbcnx, "SELECT * FROM gcellmaster WHERE penid=$penid" .
                         " ORDER BY cellid, id");
 
 while ( $cellrow = mysqli_fetch_array($celldata) ) {
@@ -240,7 +240,7 @@ while ( $cellrow = mysqli_fetch_array($celldata) ) {
    echo("</td>");
    echo("</tr>\n");
 /*
-   $singledata = mysqli_query($dbcnx, "SELECT * FROM gSingleCell" .
+   $singledata = mysqli_query($dbcnx, "SELECT * FROM gsinglecell" .
                              " WHERE masterid=$masterid" .
                              " ORDER BY cellid,id");
    $rowcount=0;
@@ -266,7 +266,7 @@ while ( $cellrow = mysqli_fetch_array($celldata) ) {
    echo("</table>\n");
    
    //sort on last three characters of file name
-   //$rawfiledata = mysqli_query($dbcnx, "SELECT * FROM gDataRaw" .
+   //$rawfiledata = mysqli_query($dbcnx, "SELECT * FROM gdataraw" .
    //                           " WHERE masterid=$masterid" .
    //                           " ORDER BY RIGHT(respfile,3),id");
  
@@ -275,12 +275,12 @@ while ( $cellrow = mysqli_fetch_array($celldata) ) {
      $badwhere="";
    } else {
      $badstr="(<a href=\"$fnpeninfo?penname=$penname&bkmk=$bkmk&expand=$expand&showbad=1#" . $cellrow["cellid"] ."\">+Show bad files</a>)"; 
-     $badwhere=" AND not(gDataRaw.bad)";
+     $badwhere=" AND not(gdataraw.bad)";
    }
-   $sql="SELECT gDataRaw.*,gData.value FROM gDataRaw" .
-     " LEFT JOIN gData ON gDataRaw.id=gData.rawid AND gData.name='DiscriminationIndex'".
-     " WHERE gDataRaw.masterid=$masterid $badwhere" .
-     " ORDER BY gDataRaw.id,gDataRaw.respfile,gDataRaw.parmfile";
+   $sql="SELECT gdataraw.*,gdata.value FROM gdataraw" .
+     " LEFT JOIN gdata ON gdataraw.id=gdata.rawid AND gdata.name='DiscriminationIndex'".
+     " WHERE gdataraw.masterid=$masterid $badwhere" .
+     " ORDER BY gdataraw.id,gdataraw.respfile,gdataraw.parmfile";
    $rawfiledata = mysqli_query($dbcnx, $sql);
    //echo($sql . "<br>");
 
@@ -299,7 +299,7 @@ while ( $cellrow = mysqli_fetch_array($celldata) ) {
    
    echo("<td>$badstr</td></tr>\n");
    while ( $row = mysqli_fetch_array($rawfiledata) ) {
-     // display file names associated with this gDataRaw entry
+     // display file names associated with this gdataraw entry
      
      $rawid=$row["id"];
      $runclassid=$row["runclassid"];
@@ -373,7 +373,7 @@ while ( $cellrow = mysqli_fetch_array($celldata) ) {
        
      }
      //echo("</a></td>\n");
-     $cellfiledata=mysqli_query($dbcnx, "SELECT DISTINCT channum,unit FROM sCellFile WHERE rawid=$rawid ORDER BY channum");
+     $cellfiledata=mysqli_query($dbcnx, "SELECT DISTINCT channum,unit FROM scellfile WHERE rawid=$rawid ORDER BY channum");
      
      echo("<td>\n");
      if (mysqli_num_rows($cellfiledata)>0) {
@@ -438,7 +438,7 @@ while ( $cellrow = mysqli_fetch_array($celldata) ) {
      $ff="<tt><font size=2>";
      if ($expand=="parm" . $rawid) {
         echo("<tr><td colspan=3>\n");
-        $sql="SELECT * FROM gData WHERE rawid=$rawid AND parmtype=0 ORDER BY id";
+        $sql="SELECT * FROM gdata WHERE rawid=$rawid AND parmtype=0 ORDER BY id";
         $parmdata=mysqli_query($dbcnx, $sql);
         if (mysqli_num_rows($parmdata)==0) {
           echo("<b>No parameter data</b>");
@@ -457,7 +457,7 @@ while ( $cellrow = mysqli_fetch_array($celldata) ) {
           
           echo("\n</td><td valign=top colspan=3>\n\n");
           
-          $sql="SELECT * FROM gData WHERE rawid=$rawid AND parmtype=1 ORDER BY id";
+          $sql="SELECT * FROM gdata WHERE rawid=$rawid AND parmtype=1 ORDER BY id";
           $parmdata=mysqli_query($dbcnx, $sql);
           echo("<table cellpadding=0 cellspacing=0>\n");
           while ($row=mysqli_fetch_array($parmdata)){

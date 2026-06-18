@@ -5,14 +5,14 @@ created 2002 - SVD
 ***/
 
 // userid - string id of user to go in added by
-// masterid - id in gCellMaster
+// masterid - id in gcellmaster
 //|       id | name     |
 //|        0 | freeview |
 //|        1 | review   |
 //|        2 | gratrev  |
 //|        3 | natrev   |
 //|        4 | imview   |
-// rawid - id in gDataRaw (-1 for add new entry)
+// rawid - id in gdataraw (-1 for add new entry)
 // action 0 - add file
 //        1 - edit file
 //        2 - delete file?
@@ -21,7 +21,7 @@ created 2002 - SVD
 include_once "./celldb.php";
 
 if (""!=$masterid) {
-   $celldata = mysqli_query($dbcnx, "SELECT * FROM gCellMaster WHERE id=$masterid");
+   $celldata = mysqli_query($dbcnx, "SELECT * FROM gcellmaster WHERE id=$masterid");
    $masterdata=mysqli_fetch_array($celldata);
    $cellid=$masterdata["cellid"];
    $penid=$masterdata["penid"];
@@ -38,12 +38,12 @@ if (""!=$masterid) {
 
 }
 if (2==$action) {
-   $sql="SELECT * FROM gDataRaw WHERE masterid=$masterid AND id=$rawid";
+   $sql="SELECT * FROM gdataraw WHERE masterid=$masterid AND id=$rawid";
    $rawfiledata = mysqli_query($dbcnx, $sql);
    $rawfilerows=mysqli_num_rows($rawfiledata);
    
-   // figure out runclass to insert/update in gDataRaw
-   $sql="SELECT DISTINCT id,name FROM gRunClass where id=$runclassid";
+   // figure out runclass to insert/update in gdataraw
+   $sql="SELECT DISTINCT id,name FROM grunclass where id=$runclassid";
    $runclassdata=mysqli_query($dbcnx, $sql);
    $row=mysqli_fetch_array($runclassdata);
    $runclass=$row["name"];
@@ -72,10 +72,10 @@ if (2==$action) {
    }
 
    if (0==$rawfilerows) {
-      // ie, gDataRaw entry doesn't exist yet. create a new
+      // ie, gdataraw entry doesn't exist yet. create a new
       // entry
 
-      $sql="INSERT INTO gDataRaw" .
+      $sql="INSERT INTO gdataraw" .
            " (cellid,masterid,runclassid,stimspeedid,runclass," .
            "resppath,stimfile,respfile,matlabfile,eyecalfile,".
            "plexonfile,time,task,".
@@ -95,9 +95,9 @@ if (2==$action) {
       $result=mysqli_query($dbcnx, $sql);
       $rawid=mysqli_insert_id();
    } else {
-      // gDataRaw entry does exist.  update with posted values
+      // gdataraw entry does exist.  update with posted values
      
-      $sql="UPDATE gDataRaw SET ".
+      $sql="UPDATE gdataraw SET ".
            "runclassid=$runclassid,".
            "stimspeedid=$stimspeedid,".
            "runclass=\"$runclass\",".
@@ -137,16 +137,16 @@ if (2==$action) {
      $isolation[$ii]=(int)$isolation[$ii];
      $crap[$ii]=(int)$crap[$ii];
 
-     $sql="SELECT * FROM gSingleCell WHERE id=" . $singleid[$ii];
+     $sql="SELECT * FROM gsinglecell WHERE id=" . $singleid[$ii];
      $singledata=mysqli_query($dbcnx, $sql);
      $singrow=mysqli_fetch_array($singledata);
      $cellid0=$singrow["cellid"];
      $channel[$ii]=$singrow["channel"];
      $unit[$ii]=$singrow["unit"];
      if (-1==$singlerawid[$ii]) {
-       // need to create a new gSingleRaw entry
+       // need to create a new gsingleraw entry
        
-       $sql="INSERT INTO gSingleRaw" .
+       $sql="INSERT INTO gsingleraw" .
          " (cellid,masterid,singleid,penid,".
          "rawid,channel,unit,".
          "isolation,crap,".
@@ -160,7 +160,7 @@ if (2==$action) {
        $singleid[$ii]=mysqli_insert_id();
        
      } else {
-       $sql="UPDATE gSingleRaw SET ".
+       $sql="UPDATE gsingleraw SET ".
          "cellid=\"$cellid0\",".
          "rawid=" . $rawid . ",".
          "isolation=" . $isolation[$ii] . ",".
@@ -201,13 +201,13 @@ echo("  (<a href=\"celllist.php?userid=$userid&sessionid=$sessionid#$bkmk\">Cell
 
 <?php
 if ($rawid>0) {
-   // raw data entry already exists.  load info from gDataRaw
-   $sql="SELECT * FROM gDataRaw WHERE id=$rawid";
+   // raw data entry already exists.  load info from gdataraw
+   $sql="SELECT * FROM gdataraw WHERE id=$rawid";
    $rawdata=mysqli_query($dbcnx, $sql);
    $rowcount=mysqli_num_rows($rawdata);
    
    if ($rowcount==0) {
-      $rawid=-1; // no entry currently exists in gDataRaw
+      $rawid=-1; // no entry currently exists in gdataraw
    } else {
       $row = mysqli_fetch_array($rawdata);
       // don't overwrite variables that have already been defined. 
@@ -224,19 +224,19 @@ if ($rawid>0) {
 }
 
 if (-1==$rawid and $masterid>0) {
-   // new rawdata. guess info from previous gDataRaw entry for this cell
-   $sql="SELECT max(gDataRaw.id) as maxid" .
-     " FROM gDataRaw, gPenetration, gCellMaster" .
-     " WHERE gPenetration.id=gCellMaster.penid" .
-     " AND gDataRaw.masterid=gCellMaster.id" .
-     " AND gPenetration.animal=\"$animal\"";
+   // new rawdata. guess info from previous gdataraw entry for this cell
+   $sql="SELECT max(gdataraw.id) as maxid" .
+     " FROM gdataraw, gpenetration, gcellmaster" .
+     " WHERE gpenetration.id=gcellmaster.penid" .
+     " AND gdataraw.masterid=gcellmaster.id" .
+     " AND gpenetration.animal=\"$animal\"";
    
    $rawdata=mysqli_query($dbcnx, $sql);
    $rowcount=mysqli_num_rows($rawdata);
    $row=mysqli_fetch_array($rawdata);
    
    if (""==$row["maxid"]) {
-     $sql="SELECT max(id) as maxid FROM gDataRaw WHERE masterid=$masterid";
+     $sql="SELECT max(id) as maxid FROM gdataraw WHERE masterid=$masterid";
      $rawdata=mysqli_query($dbcnx, $sql);
      $rowcount=mysqli_num_rows($rawdata);
      $row=mysqli_fetch_array($rawdata);
@@ -244,7 +244,7 @@ if (-1==$rawid and $masterid>0) {
 
    if (""<>$row["maxid"]) {
      $rowcount=1;
-     $sql="SELECT * FROM gDataRaw WHERE id=" . $row["maxid"];
+     $sql="SELECT * FROM gdataraw WHERE id=" . $row["maxid"];
      $lastrawdata=mysqli_query($dbcnx, $sql);
      $lastrow=mysqli_fetch_array($lastrawdata);
      
@@ -273,9 +273,9 @@ if (-1==$rawid and $masterid>0) {
    }
 }
 if (0==$rowcount) {
-  $sql="SELECT gPenetration.* FROM gPenetration,gCellMaster" .
-    " WHERE gPenetration.id=gCellMaster.penid" .
-    " AND gCellMaster.id=$masterid";
+  $sql="SELECT gpenetration.* FROM gpenetration,gcellmaster" .
+    " WHERE gpenetration.id=gcellmaster.penid" .
+    " AND gcellmaster.id=$masterid";
   $pendata=mysqli_query($dbcnx, $sql);
   $penrow=mysqli_fetch_array($pendata);
   if ($penrow) {
@@ -322,7 +322,7 @@ echo("<table>\n");
 echo("<tr><td colspan=4><HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE></td></tr>");
 
 echo("<tr><td>Task:</td><td><select name=\"task\" size=1>");
-$taskdata=mysqli_query($dbcnx, "SELECT DISTINCT task FROM gDataRaw" .
+$taskdata=mysqli_query($dbcnx, "SELECT DISTINCT task FROM gdataraw" .
                       " WHERE not(isnull(task))" .
                       " AND (addedby=\"$userid\" OR id=$rawid)" .
                       " ORDER BY task");
@@ -341,7 +341,7 @@ echo("<td>NEW TASK:</td><td><INPUT TYPE=TEXT SIZE=20 NAME=\"otask\" value=\"$tas
 
 echo("<tr><td>Run class:</td><td><select name=\"runclassid\" size=1>");
 $runclassdata=mysqli_query($dbcnx, "SELECT DISTINCT id,name" .
-                          " FROM gRunClass ORDER BY id");
+                          " FROM grunclass ORDER BY id");
 while ( $row = mysqli_fetch_array($runclassdata) ) {
    if ($runclassid == $row["id"]) {
        $sel=" selected";
@@ -354,7 +354,7 @@ echo(" </select></td>\n");
 echo("<td>NEW RUN CLASS:</td><td><INPUT TYPE=TEXT SIZE=20 NAME=\"orunclass\" value=\"\"></td></tr>\n");
 
 $speeddata=mysqli_query($dbcnx, "SELECT DISTINCT stimspeedid" .
-                       " FROM gDataRaw ORDER BY stimspeedid");
+                       " FROM gdataraw ORDER BY stimspeedid");
 
 echo("<tr><td>Speed:</td><td><select name=\"stimspeedid\" size=1>");
 while ( $row = mysqli_fetch_array($speeddata) ) {
@@ -403,7 +403,7 @@ echo("></td></tr>\n");
 echo("<tr><td colspan=4><HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE></td></tr>");
 
 //info specific to each cell
-$singledata=mysqli_query($dbcnx, "SELECT * FROM gSingleCell".
+$singledata=mysqli_query($dbcnx, "SELECT * FROM gsinglecell".
                         " WHERE masterid=$masterid".
                         " ORDER BY id");
 $cellcount=0;
@@ -411,7 +411,7 @@ while ( $row = mysqli_fetch_array($singledata) ) {
   $cellcount=$cellcount+1;
   
   $singleid=$row["id"];
-  $singlerawdata=mysqli_query($dbcnx, "SELECT * FROM gSingleRaw".
+  $singlerawdata=mysqli_query($dbcnx, "SELECT * FROM gsingleraw".
                              " WHERE singleid=$singleid AND rawid=$rawid");
   if (0==mysqli_num_rows($singlerawdata)) {
     $singlerawid=-1;
@@ -425,7 +425,7 @@ while ( $row = mysqli_fetch_array($singledata) ) {
   }
   
   echo("<tr><td>\n");
-  // singleid is gSingleCell.id for this singleraw combo
+  // singleid is gsinglecell.id for this singleraw combo
   echo("<input type=\"hidden\" name=\"singleid[$cellcount]\" value=" . 
        $singleid .">\n");
   echo("<input type=\"hidden\" name=\"singlerawid[$cellcount]\" value=" . 

@@ -34,7 +34,7 @@ if (""==$stat) {
 
 // special action for weight, figure out pull weight
 if ("weight"==$statcode) {
-  $sql="SELECT * FROM gAnimal WHERE animal='$animal'";
+  $sql="SELECT * FROM ganimal WHERE animal='$animal'";
   $animaldata=mysqli_query($dbcnx, $sql);
   if ($row=mysqli_fetch_array($animaldata)) {
     $pullweight=$row["pullweight"];
@@ -51,13 +51,13 @@ if ("weight"==$statcode) {
 // this works for weight and water
 if ("weight"==$statcode || "water"==$statcode) {
   // this works for weight and water
-  $datefield="gHealth.date";
+  $datefield="ghealth.date";
   $selvar="$stat($statcode)+1";
 } elseif ("b_"==substr($statcode,0,2)) {
-  $datefield="gPenetration.pendate";
-  $selvar="$stat(gData.value)+0.01";
+  $datefield="gpenetration.pendate";
+  $selvar="$stat(gdata.value)+0.01";
 } else {
-  $datefield="gPenetration.pendate";
+  $datefield="gpenetration.pendate";
   $selvar="$stat(corrtrials)/(avg(valid_trials)+(sum(valid_trials)=0))*100";
 }
 
@@ -75,21 +75,21 @@ if ("month"==$timeframe) {
 
 if ("b_"==substr($statcode,0,2)) {
   $sql="SELECT $selvar as value,$datevar, min(pendate) as mindate ".
-    " FROM gPenetration LEFT JOIN gCellMaster ON gPenetration.id=gCellMaster.penid".
-    " LEFT JOIN gData ON gCellMaster.id=gData.masterid" .
-    "$datecrit AND gPenetration.animal='$animal'".
-    " AND gData.name='" . substr($statcode,2) . "'".
+    " FROM gpenetration LEFT JOIN gcellmaster ON gpenetration.id=gcellmaster.penid".
+    " LEFT JOIN gdata ON gcellmaster.id=gdata.masterid" .
+    "$datecrit AND gpenetration.animal='$animal'".
+    " AND gdata.name='" . substr($statcode,2) . "'".
     " GROUP BY tm ORDER BY mindate";
   
 } elseif ("weight"==$statcode || "water"==$statcode) {
   $sql="SELECT $selvar as value,$datevar, min(date) as mindate ".
-    " FROM gAnimal LEFT JOIN gHealth ON gAnimal.id=gHealth.animal_id".
-    "$datecrit AND gAnimal.animal='$animal' AND $statcode>0 GROUP BY tm ORDER BY mindate";
+    " FROM ganimal LEFT JOIN ghealth ON ganimal.id=ghealth.animal_id".
+    "$datecrit AND ganimal.animal='$animal' AND $statcode>0 GROUP BY tm ORDER BY mindate";
 } else {
   $sql="SELECT $selvar as value,$datevar, min(pendate) as mindate ".
-    " FROM gPenetration LEFT JOIN gCellMaster ON gPenetration.id=gCellMaster.penid".
-    " LEFT JOIN gDataRaw ON gCellMaster.id=gDataRaw.masterid" .
-    "$datecrit AND gPenetration.animal='$animal' GROUP BY tm ORDER BY mindate";
+    " FROM gpenetration LEFT JOIN gcellmaster ON gpenetration.id=gcellmaster.penid".
+    " LEFT JOIN gdataraw ON gcellmaster.id=gdataraw.masterid" .
+    "$datecrit AND gpenetration.animal='$animal' GROUP BY tm ORDER BY mindate";
 }
 
 $eventdata=mysqli_query($dbcnx, $sql);
@@ -162,7 +162,7 @@ $chart->prepare();                               // Chart Preparation
 $chart->generateChartHtml();                     // Chart Generation
 
 echo("<p>");
-$animallistdata = mysqli_query($dbcnx, "SELECT animal FROM gAnimal ORDER BY animal");
+$animallistdata = mysqli_query($dbcnx, "SELECT animal FROM ganimal ORDER BY animal");
 echo("Animal: ");
 echo("<select OnChange=\"location.href=this.options[this.selectedIndex].value\">\n");
 while ( $row = mysqli_fetch_array($animallistdata) ) {
@@ -195,10 +195,10 @@ for ($ii=0; $ii<count($statcodes); $ii++) {
        $statstrings[$ii] . "</option>\n");
 }
 
-$sql="SELECT gData.name, max(gData.datatype) as mdatatype, min(gData.id) as minid".
-    " FROM gData,gCellMaster".
-    " WHERE gData.masterid=gCellMaster.id AND animal=\"$animal\"".
-    " GROUP BY gData.name HAVING mdatatype=0 ORDER BY parmtype DESC,minid";
+$sql="SELECT gdata.name, max(gdata.datatype) as mdatatype, min(gdata.id) as minid".
+    " FROM gdata,gcellmaster".
+    " WHERE gdata.masterid=gcellmaster.id AND animal=\"$animal\"".
+    " GROUP BY gdata.name HAVING mdatatype=0 ORDER BY parmtype DESC,minid";
 $pdata=mysqli_query($dbcnx, $sql);
 while ($prow=mysqli_fetch_array($pdata)) {
   if ("b_" . $prow["name"] == $statcode) {

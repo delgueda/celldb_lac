@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `NarfResults`
+-- Table structure for table `narfresults`
 --
 
-DROP TABLE IF EXISTS `NarfResults`;
+DROP TABLE IF EXISTS `narfresults`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `NarfResults` (
+CREATE TABLE `narfresults` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cellid` varchar(255) DEFAULT NULL,
   `batch` int(11) DEFAULT NULL,
@@ -44,13 +44,13 @@ CREATE TABLE `NarfResults` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `gAccess`
+-- Table structure for table `gaccess`
 --
 
-DROP TABLE IF EXISTS `gAccess`;
+DROP TABLE IF EXISTS `gaccess`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gAccess` (
+CREATE TABLE `gaccess` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `dateadded` datetime DEFAULT NULL,
   `addedby` varchar(255) DEFAULT 'david',
@@ -68,13 +68,13 @@ CREATE TABLE `gAccess` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `gAnimal`
+-- Table structure for table `ganimal`
 --
 
-DROP TABLE IF EXISTS `gAnimal`;
+DROP TABLE IF EXISTS `ganimal`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gAnimal` (
+CREATE TABLE `ganimal` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `animal` varchar(50) DEFAULT NULL,
   `cellprefix` varchar(50) DEFAULT NULL,
@@ -104,13 +104,13 @@ CREATE TABLE `gAnimal` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `gCalendar`
+-- Table structure for table `gcalendar`
 --
 
-DROP TABLE IF EXISTS `gCalendar`;
+DROP TABLE IF EXISTS `gcalendar`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gCalendar` (
+CREATE TABLE `gcalendar` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `calname` varchar(255) DEFAULT NULL,
   `userid` varchar(255) DEFAULT NULL,
@@ -126,13 +126,13 @@ CREATE TABLE `gCalendar` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `gCellMaster`
+-- Table structure for table `gcellmaster`
 --
 
-DROP TABLE IF EXISTS `gCellMaster`;
+DROP TABLE IF EXISTS `gcellmaster`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gCellMaster` (
+CREATE TABLE `gcellmaster` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` varchar(15) NOT NULL DEFAULT '',
   `cellid` varchar(15) NOT NULL DEFAULT '',
@@ -171,13 +171,13 @@ CREATE TABLE `gCellMaster` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `gData`
+-- Table structure for table `gdata`
 --
 
-DROP TABLE IF EXISTS `gData`;
+DROP TABLE IF EXISTS `gdata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gData` (
+CREATE TABLE `gdata` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` varchar(15) NOT NULL DEFAULT '',
   `masterid` int(11) NOT NULL DEFAULT '0',
@@ -199,13 +199,13 @@ CREATE TABLE `gData` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `gDataRaw`
+-- Table structure for table `gdataraw`
 --
 
-DROP TABLE IF EXISTS `gDataRaw`;
+DROP TABLE IF EXISTS `gdataraw`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gDataRaw` (
+CREATE TABLE `gdataraw` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cellid` varchar(15) NOT NULL DEFAULT '',
   `masterid` int(11) NOT NULL DEFAULT '0',
@@ -257,13 +257,13 @@ CREATE TABLE `gDataRaw` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `gHealth`
+-- Table structure for table `ghealth`
 --
 
-DROP TABLE IF EXISTS `gHealth`;
+DROP TABLE IF EXISTS `ghealth`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gHealth` (
+CREATE TABLE `ghealth` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `animal_id` int(11) DEFAULT NULL,
   `date` date DEFAULT NULL,
@@ -286,13 +286,13 @@ CREATE TABLE `gHealth` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `gPenetration`
+-- Table structure for table `gpenetration`
 --
 
-DROP TABLE IF EXISTS `gPenetration`;
+DROP TABLE IF EXISTS `gpenetration`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gPenetration` (
+CREATE TABLE `gpenetration` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `penname` varchar(50) NOT NULL DEFAULT '',
   `animal` varchar(15) DEFAULT NULL,
@@ -334,13 +334,13 @@ CREATE TABLE `gPenetration` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `gRunClass`
+-- Table structure for table `grunclass`
 --
 
-DROP TABLE IF EXISTS `gRunClass`;
+DROP TABLE IF EXISTS `grunclass`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gRunClass` (
+CREATE TABLE `grunclass` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(20) DEFAULT NULL,
   `details` varchar(255) DEFAULT NULL,
@@ -355,13 +355,13 @@ CREATE TABLE `gRunClass` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `gSingleCell`
+-- Table structure for table `gsinglecell`
 --
 
-DROP TABLE IF EXISTS `gSingleCell`;
+DROP TABLE IF EXISTS `gsinglecell`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gSingleCell` (
+CREATE TABLE `gsinglecell` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `siteid` varchar(15) NOT NULL DEFAULT '',
   `cellid` varchar(15) NOT NULL DEFAULT '',
@@ -394,13 +394,13 @@ CREATE TABLE `gSingleCell` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `gSingleRaw`
+-- Table structure for table `gsingleraw`
 --
 
-DROP TABLE IF EXISTS `gSingleRaw`;
+DROP TABLE IF EXISTS `gsingleraw`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gSingleRaw` (
+CREATE TABLE `gsingleraw` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cellid` varchar(15) NOT NULL DEFAULT '',
   `masterid` int(11) NOT NULL DEFAULT '0',
@@ -423,13 +423,13 @@ CREATE TABLE `gSingleRaw` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `gUserPrefs`
+-- Table structure for table `guserprefs`
 --
 
-DROP TABLE IF EXISTS `gUserPrefs`;
+DROP TABLE IF EXISTS `guserprefs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gUserPrefs` (
+CREATE TABLE `guserprefs` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `userid` varchar(50) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
@@ -441,7 +441,7 @@ CREATE TABLE `gUserPrefs` (
   `email` varchar(255) DEFAULT NULL,
   `lab` varchar(255) DEFAULT 'jlg',
   `lastallowqueuemaster` int(11) DEFAULT '1',
-  `lastmachinesort` varchar(255) DEFAULT 'tComputer.load1',
+  `lastmachinesort` varchar(255) DEFAULT 'tcomputer.load1',
   `lastjobcomplete` int(11) DEFAULT '-1',
   `lastjobuser` varchar(255) DEFAULT '',
   `bgcolor` varchar(255) DEFAULT '#FFFFFF',
@@ -477,13 +477,13 @@ CREATE TABLE `gUserPrefs` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oCompany`
+-- Table structure for table `ocompany`
 --
 
-DROP TABLE IF EXISTS `oCompany`;
+DROP TABLE IF EXISTS `ocompany`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `oCompany` (
+CREATE TABLE `ocompany` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `address1` varchar(255) DEFAULT NULL,
@@ -506,13 +506,13 @@ CREATE TABLE `oCompany` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oItem`
+-- Table structure for table `oitem`
 --
 
-DROP TABLE IF EXISTS `oItem`;
+DROP TABLE IF EXISTS `oitem`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `oItem` (
+CREATE TABLE `oitem` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `companyid` int(11) DEFAULT NULL,
@@ -527,13 +527,13 @@ CREATE TABLE `oItem` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oOrder`
+-- Table structure for table `oorder`
 --
 
-DROP TABLE IF EXISTS `oOrder`;
+DROP TABLE IF EXISTS `oorder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `oOrder` (
+CREATE TABLE `oorder` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `dateordered` date DEFAULT NULL,
   `daterequired` date DEFAULT NULL,
@@ -548,13 +548,13 @@ CREATE TABLE `oOrder` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oOrderItem`
+-- Table structure for table `oorderitem`
 --
 
-DROP TABLE IF EXISTS `oOrderItem`;
+DROP TABLE IF EXISTS `oorderitem`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `oOrderItem` (
+CREATE TABLE `oorderitem` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `orderid` int(11) DEFAULT NULL,
   `itemid` int(11) DEFAULT NULL,
@@ -584,13 +584,13 @@ CREATE TABLE `pages` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `sBatch`
+-- Table structure for table `sbatch`
 --
 
-DROP TABLE IF EXISTS `sBatch`;
+DROP TABLE IF EXISTS `sbatch`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sBatch` (
+CREATE TABLE `sbatch` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(20) DEFAULT NULL,
   `details` varchar(255) DEFAULT NULL,
@@ -636,13 +636,13 @@ CREATE TABLE `sBatch` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `sCellFile`
+-- Table structure for table `scellfile`
 --
 
-DROP TABLE IF EXISTS `sCellFile`;
+DROP TABLE IF EXISTS `scellfile`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sCellFile` (
+CREATE TABLE `scellfile` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cellid` varchar(15) NOT NULL DEFAULT '',
   `masterid` int(11) NOT NULL DEFAULT '0',
@@ -688,13 +688,13 @@ CREATE TABLE `sCellFile` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `sResults`
+-- Table structure for table `sresults`
 --
 
-DROP TABLE IF EXISTS `sResults`;
+DROP TABLE IF EXISTS `sresults`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sResults` (
+CREATE TABLE `sresults` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `runid` int(11) DEFAULT NULL,
   `batch` int(11) DEFAULT NULL,
@@ -707,13 +707,13 @@ CREATE TABLE `sResults` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `sRunData`
+-- Table structure for table `srundata`
 --
 
-DROP TABLE IF EXISTS `sRunData`;
+DROP TABLE IF EXISTS `srundata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sRunData` (
+CREATE TABLE `srundata` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `celldataid` int(11) NOT NULL DEFAULT '0',
   `masterid` int(11) DEFAULT NULL,
@@ -734,13 +734,13 @@ CREATE TABLE `sRunData` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tBatch`
+-- Table structure for table `tbatch`
 --
 
-DROP TABLE IF EXISTS `tBatch`;
+DROP TABLE IF EXISTS `tbatch`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tBatch` (
+CREATE TABLE `tbatch` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) DEFAULT NULL,
   `details` varchar(255) DEFAULT NULL,
@@ -749,13 +749,13 @@ CREATE TABLE `tBatch` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tCell`
+-- Table structure for table `tcell`
 --
 
-DROP TABLE IF EXISTS `tCell`;
+DROP TABLE IF EXISTS `tcell`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tCell` (
+CREATE TABLE `tcell` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cellid` varchar(15) NOT NULL DEFAULT '',
   `rfsize` int(11) DEFAULT '0',
@@ -768,13 +768,13 @@ CREATE TABLE `tCell` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tCellData`
+-- Table structure for table `tcelldata`
 --
 
-DROP TABLE IF EXISTS `tCellData`;
+DROP TABLE IF EXISTS `tcelldata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tCellData` (
+CREATE TABLE `tcelldata` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cellid` varchar(15) NOT NULL DEFAULT '',
   `info` varchar(255) DEFAULT NULL,
@@ -787,13 +787,13 @@ CREATE TABLE `tCellData` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tCellFile`
+-- Table structure for table `tcellfile`
 --
 
-DROP TABLE IF EXISTS `tCellFile`;
+DROP TABLE IF EXISTS `tcellfile`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tCellFile` (
+CREATE TABLE `tcellfile` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `celldataid` int(11) NOT NULL DEFAULT '0',
   `respfile` varchar(255) DEFAULT NULL,
@@ -835,13 +835,13 @@ CREATE TABLE `tCellFile` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tComputer`
+-- Table structure for table `tcomputer`
 --
 
-DROP TABLE IF EXISTS `tComputer`;
+DROP TABLE IF EXISTS `tcomputer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tComputer` (
+CREATE TABLE `tcomputer` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
   `load1` double(16,4) DEFAULT '0.0000',
@@ -873,13 +873,13 @@ CREATE TABLE `tComputer` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tEvent`
+-- Table structure for table `tevent`
 --
 
-DROP TABLE IF EXISTS `tEvent`;
+DROP TABLE IF EXISTS `tevent`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tEvent` (
+CREATE TABLE `tevent` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `code` int(11) DEFAULT '0',
   `note` varchar(255) DEFAULT NULL,
@@ -895,13 +895,13 @@ CREATE TABLE `tEvent` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tGlobal`
+-- Table structure for table `tglobal`
 --
 
-DROP TABLE IF EXISTS `tGlobal`;
+DROP TABLE IF EXISTS `tglobal`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tGlobal` (
+CREATE TABLE `tglobal` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `enterradius` double DEFAULT NULL,
   `exitradius` double DEFAULT NULL,
@@ -917,13 +917,13 @@ CREATE TABLE `tGlobal` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tGlobalData`
+-- Table structure for table `tglobaldata`
 --
 
-DROP TABLE IF EXISTS `tGlobalData`;
+DROP TABLE IF EXISTS `tglobaldata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tGlobalData` (
+CREATE TABLE `tglobaldata` (
   `createdate` datetime DEFAULT NULL,
   `createdby` varchar(50) DEFAULT 'svd',
   `daemonclick` datetime DEFAULT NULL,
@@ -932,13 +932,13 @@ CREATE TABLE `tGlobalData` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tGrData`
+-- Table structure for table `tgrdata`
 --
 
-DROP TABLE IF EXISTS `tGrData`;
+DROP TABLE IF EXISTS `tgrdata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tGrData` (
+CREATE TABLE `tgrdata` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `cellid` varchar(15) NOT NULL DEFAULT '',
   `path` varchar(255) DEFAULT '/home/david/data',
@@ -960,13 +960,13 @@ CREATE TABLE `tGrData` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tQueue`
+-- Table structure for table `tqueue`
 --
 
-DROP TABLE IF EXISTS `tQueue`;
+DROP TABLE IF EXISTS `tqueue`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tQueue` (
+CREATE TABLE `tqueue` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `rundataid` int(11) DEFAULT NULL,
   `progname` varchar(255) DEFAULT NULL,
@@ -992,13 +992,13 @@ CREATE TABLE `tQueue` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tRunData`
+-- Table structure for table `trundata`
 --
 
-DROP TABLE IF EXISTS `tRunData`;
+DROP TABLE IF EXISTS `trundata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tRunData` (
+CREATE TABLE `trundata` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `celldataid` int(11) NOT NULL DEFAULT '0',
   `respcopies` int(11) DEFAULT '0',
@@ -1048,13 +1048,13 @@ CREATE TABLE `tRunData` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tRunFile`
+-- Table structure for table `trunfile`
 --
 
-DROP TABLE IF EXISTS `tRunFile`;
+DROP TABLE IF EXISTS `trunfile`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tRunFile` (
+CREATE TABLE `trunfile` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `rundataid` int(11) NOT NULL DEFAULT '0',
   `cellfileid` int(11) NOT NULL DEFAULT '0',
@@ -1073,13 +1073,13 @@ CREATE TABLE `tRunFile` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tRunRes`
+-- Table structure for table `trunres`
 --
 
-DROP TABLE IF EXISTS `tRunRes`;
+DROP TABLE IF EXISTS `trunres`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tRunRes` (
+CREATE TABLE `trunres` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `rundataid` int(11) NOT NULL DEFAULT '0',
   `decorrspace` int(11) NOT NULL DEFAULT '1',
@@ -1100,13 +1100,13 @@ CREATE TABLE `tRunRes` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tRunResult`
+-- Table structure for table `trunresult`
 --
 
-DROP TABLE IF EXISTS `tRunResult`;
+DROP TABLE IF EXISTS `trunresult`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tRunResult` (
+CREATE TABLE `trunresult` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `rundataid` int(11) NOT NULL DEFAULT '0',
   `decorrspace` int(11) NOT NULL DEFAULT '1',

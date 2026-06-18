@@ -4,7 +4,7 @@
 include_once "./celldb.php";
 
 if (""==$orderby) {
-  $orderby="tQueue.id";
+  $orderby="tqueue.id";
 }
 if (""==$complete && ""==$lastjobcomplete) {
   $complete=-1;
@@ -18,7 +18,7 @@ if (""==$user && ""==$lastjobuser) {
 }
 
 if (""!=$userid) {
-  $sql="UPDATE gUserPrefs" .
+  $sql="UPDATE guserprefs" .
     " SET lastjobuser=\"$user\", " .
     " lastjobcomplete=$complete" .
     " WHERE userid=\"$userid\"";
@@ -26,7 +26,7 @@ if (""!=$userid) {
 }
 
 if (0!=$action && $target>0) {
-  $sql="SELECT * FROM tQueue WHERE id=$target";
+  $sql="SELECT * FROM tqueue WHERE id=$target";
   $queuedata=mysqli_query($dbcnx, $sql);
   
   if (0==mysqli_num_rows($queuedata)) {
@@ -39,23 +39,23 @@ if (0!=$action && $target>0) {
     // check requested action and make sure user has permission
     if (-1==$action && ($seclevel>=5 || $row["user"]==$userid)) {
       //echo("Removing queue id $target<br>");
-      $sql="DELETE FROM tQueue WHERE id=$target";
+      $sql="DELETE FROM tqueue WHERE id=$target";
       $compdata=mysqli_query($dbcnx, $sql);
     } elseif (-2==$action && ($seclevel>=5 || $row["user"]==$userid)) {
       //echo("Removing queue id $target<br>");
-      $sql="UPDATE tQueue SET killnow=1 WHERE id=$target";
+      $sql="UPDATE tqueue SET killnow=1 WHERE id=$target";
       $compdata=mysqli_query($dbcnx, $sql);
     } elseif (1==$action) {
       //echo("Reseting queue id $target<br>");
-      $sql="UPDATE tQueue SET complete=0 WHERE id=$target";
+      $sql="UPDATE tqueue SET complete=0 WHERE id=$target";
       $compdata=mysqli_query($dbcnx, $sql);
     } elseif (3==$action) {
       //echo("Increasing priority for id $target<br>");
-      $sql="UPDATE tQueue SET priority=priority+1 WHERE id=$target";
+      $sql="UPDATE tqueue SET priority=priority+1 WHERE id=$target";
       $compdata=mysqli_query($dbcnx, $sql);
     } elseif (4==$action) {
       //echo("Decreasing priority for id $target<br>");
-      $sql="UPDATE tQueue SET priority=priority-1 WHERE id=$target";
+      $sql="UPDATE tqueue SET priority=priority-1 WHERE id=$target";
       $compdata=mysqli_query($dbcnx, $sql);
      } else {
       //echo("Insufficient security level for requested action<br>");
@@ -103,7 +103,7 @@ if ($user == "%") {
 } else {
   echo(" <option value=\"%\">All</option>\n");
 }
-$userdata = mysqli_query($dbcnx, "SELECT DISTINCT user FROM tQueue ORDER BY user");
+$userdata = mysqli_query($dbcnx, "SELECT DISTINCT user FROM tqueue ORDER BY user");
 while ( $row = mysqli_fetch_array($userdata) ) {
    if ($user == $row["user"]) {
        $sel=" selected";
@@ -133,7 +133,7 @@ if ($machinename == "%") {
   echo(" <option value=\"%\">All</option>");
 }
 $machinedata=mysqli_query($dbcnx, "SELECT DISTINCT machinename" .
-                       " FROM tQueue WHERE complete=-1 ORDER BY machinename");
+                       " FROM tqueue WHERE complete=-1 ORDER BY machinename");
 while ( $row = mysqli_fetch_array($machinedata) ) {
    if ($machinename == $row["machinename"]) {
        $sel=" selected";
@@ -152,7 +152,7 @@ echo("</FORM>");
 
 if (-2==$complete) {
   $sql="SELECT *,(to_days(lastdate)*3600*24+time_to_sec(lastdate)-to_days(startdate)*3600*24-time_to_sec(startdate)) as duration" .
-    " FROM tQueue" .
+    " FROM tqueue" .
     " WHERE user like \"$user\"" .
     " AND note like \"%$notemask%\"" .
     " AND (machinename like \"$machinename\"" .
@@ -160,7 +160,7 @@ if (-2==$complete) {
     " ORDER BY $orderby";
 } else {
   $sql="SELECT *,(to_days(lastdate)*3600*24+time_to_sec(lastdate)-to_days(startdate)*3600*24-time_to_sec(startdate)) as duration" .
-    " FROM tQueue" .
+    " FROM tqueue" .
     " WHERE user like \"$user\"" .
     " AND note like \"%$notemask%\"" .
     " AND (machinename like \"$machinename\"" .
@@ -181,18 +181,18 @@ $sorturl="<a href=\"queuemonitor.php?sessionid=$sessionid&userid=$userid&user=$u
 
 echo("<table>");
 echo("<tr bgcolor=\"#bbbbff\">\n");
-echo("  <td><b>" . $sorturl . "tQueue.id\">QID</a></b>&nbsp;</td>\n");
-echo("  <td><b>&nbsp;" . $sorturl . "tQueue.user\">user</a></b>&nbsp;</td>\n");
-echo("  <td><b>&nbsp;" . $sorturl . "tQueue.complete\">status</a>\n");
+echo("  <td><b>" . $sorturl . "tqueue.id\">QID</a></b>&nbsp;</td>\n");
+echo("  <td><b>&nbsp;" . $sorturl . "tqueue.user\">user</a></b>&nbsp;</td>\n");
+echo("  <td><b>&nbsp;" . $sorturl . "tqueue.complete\">status</a>\n");
 echo("(" . $sorturl . "duration\">dur</a>)</b>&nbsp;</td>\n");
-echo("  <td><b>&nbsp;" . $sorturl . "tQueue.progress\">cnt</a></b>&nbsp;</td>\n");
+echo("  <td><b>&nbsp;" . $sorturl . "tqueue.progress\">cnt</a></b>&nbsp;</td>\n");
 if ($seclevel>=10) {
-  echo("  <td><b>&nbsp;" . $sorturl . "tQueue.priority DESC\">pri</a></b>&nbsp;</td>\n");
+  echo("  <td><b>&nbsp;" . $sorturl . "tqueue.priority DESC\">pri</a></b>&nbsp;</td>\n");
 }
-//echo("  <td><b>&nbsp;" . $sorturl . "tQueue.progname\">proc name</a></b></td>\n");
-echo("  <td><b>&nbsp;" . $sorturl . "tQueue.note\">note</a></b>&nbsp;</td>\n");
-echo("  <td><b>&nbsp;" . $sorturl . "tQueue.machinename\">machine</a></b></td>\n");
-echo("  <td><b>&nbsp;" . $sorturl . "tQueue.pid\">pid</a></b>&nbsp;</td>\n");
+//echo("  <td><b>&nbsp;" . $sorturl . "tqueue.progname\">proc name</a></b></td>\n");
+echo("  <td><b>&nbsp;" . $sorturl . "tqueue.note\">note</a></b>&nbsp;</td>\n");
+echo("  <td><b>&nbsp;" . $sorturl . "tqueue.machinename\">machine</a></b></td>\n");
+echo("  <td><b>&nbsp;" . $sorturl . "tqueue.pid\">pid</a></b>&nbsp;</td>\n");
 echo("   <td>&nbsp;</td>\n");
 echo("   <td>&nbsp;</td>\n");
 echo("  </tr>\n");

@@ -24,8 +24,8 @@ if (1==$action) {
   
   if ($calid>0) {
     
-    // update existing gHealth entry
-    $sql="UPDATE gCalendar SET".
+    // update existing ghealth entry
+    $sql="UPDATE gcalendar SET".
       " caldate=\"" . $caldate . "\"," .
       " userid=\"" . $caluser . "\"," .
       " calname=\"" . $calname . "\"" .
@@ -35,7 +35,7 @@ if (1==$action) {
   } else {
     
     // insert new penetration only if values entered
-    $sql="INSERT INTO gCalendar".
+    $sql="INSERT INTO gcalendar".
       " (calname,userid,caldate,dateadded,addedby)".
       " VALUES (\"$calname\",\"$caluser\",\"$caldate\"," . 
       "now(),'$userid')";
@@ -94,7 +94,7 @@ if (""==$stopdate) {
 if (""==$calid) {
   echo("<p><b>NSL doo-ty calendar for $calname / user $caluser</b></p>\n");
   
-  $sql="SELECT DISTINCT calname FROM gCalendar ORDER BY calname";
+  $sql="SELECT DISTINCT calname FROM gcalendar ORDER BY calname";
   $caldata=mysqli_query($dbcnx, $sql);
   echo("<FORM ACTION=\"calendar.php\" METHOD=GET>\n");
   echo(" <input type=\"hidden\" name=\"calname\" value=\"$calname\">\n");
@@ -113,7 +113,7 @@ if (""==$calid) {
   }
   echo("</select>&nbsp;\n");
 
-  $sql="SELECT DISTINCT userid as caluser FROM gUserPrefs WHERE lab=\"nsl\" ORDER BY caluser";
+  $sql="SELECT DISTINCT userid as caluser FROM guserprefs WHERE lab=\"nsl\" ORDER BY caluser";
   $caldata=mysqli_query($dbcnx, $sql);
   echo("User: ");
   echo("<select OnChange=\"location.href=this.options[this.selectedIndex].value\">\n");
@@ -164,9 +164,9 @@ if (""==$calid) {
 
   //echo("<br>\n");
   
-  $sql="SELECT gCalendar.*,gUserPrefs.email".
-    " FROM gCalendar INNER JOIN gUserPrefs ON gCalendar.userid=gUserPrefs.userid".
-    " WHERE gCalendar.userid like \"$caluser\" AND calname like \"$calname\"".
+  $sql="SELECT gcalendar.*,guserprefs.email".
+    " FROM gcalendar INNER JOIN guserprefs ON gcalendar.userid=guserprefs.userid".
+    " WHERE gcalendar.userid like \"$caluser\" AND calname like \"$calname\"".
     " AND caldate >= \"$startdate\"  AND caldate <= \"$stopdate\"".
     " ORDER BY caldate,userid";
   $caldata=mysqli_query($dbcnx, $sql);
@@ -209,7 +209,7 @@ if (""==$calid) {
   if (-1==$calid) {
     
   } else {
-    $sql="SELECT * FROM gCalendar WHERE id=$calid";
+    $sql="SELECT * FROM gcalendar WHERE id=$calid";
     $caldata=mysqli_query($dbcnx, $sql);
     $row=mysqli_fetch_array($caldata);
     $caluser=$row["userid"];
@@ -243,7 +243,7 @@ if (""==$calid) {
   echo("</td></tr>\n");
 
   echo("<tr><td>What:</td><td><select name=\"calname\" $ustr1>\n");
-  $sql="SELECT DISTINCT calname FROM gCalendar ORDER BY calname";
+  $sql="SELECT DISTINCT calname FROM gcalendar ORDER BY calname";
   $caldata=mysqli_query($dbcnx, $sql);
   while ( $row = mysqli_fetch_array($caldata) ) {
     if ($calname == $row["calname"]) {
@@ -257,7 +257,7 @@ if (""==$calid) {
   echo(" </select></td><tr>\n");
 
   echo("<tr><td>Who:</td><td><select name=\"caluser\" $ustr1>\n");
-  $sql="SELECT DISTINCT userid as caluser FROM gUserPrefs WHERE lab=\"nsl\" ORDER BY caluser";
+  $sql="SELECT DISTINCT userid as caluser FROM guserprefs WHERE lab=\"nsl\" ORDER BY caluser";
   $caldata=mysqli_query($dbcnx, $sql);
   while ( $row = mysqli_fetch_array($caldata) ) {
     if ($caluser == $row["caluser"]) {

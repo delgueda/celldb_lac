@@ -19,7 +19,7 @@ echo("<table>\n");
 echo("<tr><td colspan=4><HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE></td></tr>");
 
 echo("<tr><td>Task:</td><td><select name=\"task\" size=1>");
-$taskdata=mysqli_query($dbcnx, "SELECT DISTINCT task FROM gDataRaw" .
+$taskdata=mysqli_query($dbcnx, "SELECT DISTINCT task FROM gdataraw" .
                       " WHERE not(isnull(task))" .
                       " AND (addedby=\"$userid\" OR id=$rawid)" .
                       " ORDER BY task");
@@ -38,7 +38,7 @@ echo("<td>NEW TASK:</td><td><INPUT TYPE=TEXT SIZE=20 NAME=\"otask\" value=\"$tas
 
 echo("<tr><td>Run class:</td><td><select name=\"runclassid\" size=1>");
 $runclassdata=mysqli_query($dbcnx, "SELECT DISTINCT id,name" .
-                          " FROM gRunClass ORDER BY id");
+                          " FROM grunclass ORDER BY id");
 while ( $row = mysqli_fetch_array($runclassdata) ) {
    if ($runclassid == $row["id"]) {
        $sel=" selected";
@@ -51,7 +51,7 @@ echo(" </select></td>\n");
 echo("<td>NEW RUN CLASS:</td><td><INPUT TYPE=TEXT SIZE=20 NAME=\"orunclass\" value=\"\"></td></tr>\n");
 
 $speeddata=mysqli_query($dbcnx, "SELECT DISTINCT stimspeedid" .
-                       " FROM gDataRaw ORDER BY stimspeedid");
+                       " FROM gdataraw ORDER BY stimspeedid");
 
 echo("<tr><td>Speed:</td><td><select name=\"stimspeedid\" size=1>");
 while ( $row = mysqli_fetch_array($speeddata) ) {
@@ -100,7 +100,7 @@ echo("></td></tr>\n");
 echo("<tr><td colspan=4><HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE></td></tr>");
 
 //info specific to each cell
-$singledata=mysqli_query($dbcnx, "SELECT * FROM gSingleCell".
+$singledata=mysqli_query($dbcnx, "SELECT * FROM gsinglecell".
                         " WHERE masterid=$masterid".
                         " ORDER BY id");
 $cellcount=0;
@@ -108,7 +108,7 @@ while ( $row = mysqli_fetch_array($singledata) ) {
   $cellcount=$cellcount+1;
   
   $singleid=$row["id"];
-  $singlerawdata=mysqli_query($dbcnx, "SELECT * FROM gSingleRaw".
+  $singlerawdata=mysqli_query($dbcnx, "SELECT * FROM gsingleraw".
                              " WHERE singleid=$singleid AND rawid=$rawid");
   if (0==mysqli_num_rows($singlerawdata)) {
     $singlerawid=-1;
@@ -128,7 +128,7 @@ while ( $row = mysqli_fetch_array($singledata) ) {
   }
   
   echo("<tr><td>\n");
-  // singleid is gSingleCell.id for this singleraw combo
+  // singleid is gsinglecell.id for this singleraw combo
   echo("<input type=\"hidden\" name=\"singleid[$cellcount]\" value=" . 
        $singleid .">\n");
   echo("<input type=\"hidden\" name=\"singlerawid[$cellcount]\" value=" . 

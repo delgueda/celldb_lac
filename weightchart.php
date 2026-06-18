@@ -48,7 +48,7 @@ if (isset($animals) && "all"==$animals) {
  
    $animals="";
    // find all active animals (excluding test fake animal)
-   $sql="SELECT *, (implanted=1) as imp FROM gAnimal".
+   $sql="SELECT *, (implanted=1) as imp FROM ganimal".
      " WHERE onschedule<=$maxonschedule AND animal<>\"Test\" AND lab like '$LAB' AND species=\"$species\"" .
      " ORDER BY (implanted=1) DESC,animal";
    $adata=mysqli_query($dbcnx, $sql);
@@ -96,7 +96,7 @@ if (!isset($month) || !isset($year) || !isset($animals)) {
 
    $animals="";
    // find all active animals (excluding test fake animal)
-   $sql="SELECT *, (implanted=1) as imp FROM gAnimal".
+   $sql="SELECT *, (implanted=1) as imp FROM ganimal".
      " WHERE onschedule<=$maxonschedule AND animal<>\"Test\" AND lab like '$LAB' AND species=\"$species\"" .
      " ORDER BY (implanted=1) DESC,animal";
    $adata=mysqli_query($dbcnx, $sql);
@@ -190,7 +190,7 @@ if ($setidx>0){
  $roundto="0";
 for ($ii=0; $ii<count($aset); $ii++) {
   $aset[$ii]=trim($aset[$ii]);
-  $sql="SELECT * FROM gAnimal WHERE animal like \"" . $aset[$ii] . "\"";
+  $sql="SELECT * FROM ganimal WHERE animal like \"" . $aset[$ii] . "\"";
   $adata=mysqli_query($dbcnx, $sql);
   if ($row=mysqli_fetch_array($adata)){
     $animal_id[$ii]=$row["id"];
@@ -252,7 +252,7 @@ for ($curstamp=$firststamp; $curstamp<$laststamp;
   for ($ii=0; $ii<count($aset); $ii++) {
     $sql="SELECT schedule,round(weight,$roundto) as weight,".
       " round(water,$roundto) as water, left(timeonoroff,5) as time".
-      " FROM gHealth".
+      " FROM ghealth".
       " WHERE animal_id=" . $animal_id[$ii] .
       " AND date=\"$year-$month-$dd\"";
     $adata=mysqli_query($dbcnx, $sql);

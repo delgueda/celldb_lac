@@ -11,13 +11,13 @@ include_once "./celldb.php";
 // load data pre-existing data about the penetration -- if it exists
 if ((-1==$penid or ""==$penid) and ""==$penname) {
    // only penname provided, see if it exists
-   $sql="SELECT * FROM gPenetration WHERE well=$well AND animal=\"$animal\" ORDER BY penname";
+   $sql="SELECT * FROM gpenetration WHERE well=$well AND animal=\"$animal\" ORDER BY penname";
 } elseif (-1==$penid or ""==$penid) {
    // only penname provided, see if it exists
-   $sql="SELECT * FROM gPenetration WHERE penname=\"$penname\"";
+   $sql="SELECT * FROM gpenetration WHERE penname=\"$penname\"";
 } else {
    // see if penid exists
-   $sql="SELECT * FROM gPenetration WHERE id=$penid";
+   $sql="SELECT * FROM gpenetration WHERE id=$penid";
 }
 
 $pendata = mysqli_query($dbcnx, $sql);
@@ -75,7 +75,7 @@ while ($penrow=mysqli_fetch_array($pendata)) {
   $ppd=(float)$penrow["etudeg"];
   
   // load cells associated with this penetration
-  $celldata = mysqli_query($dbcnx, "SELECT * FROM gCellMaster WHERE penid=$penid");
+  $celldata = mysqli_query($dbcnx, "SELECT * FROM gcellmaster WHERE penid=$penid");
   
   while ( $cellrow = mysqli_fetch_array($celldata) ) {
     $masterid=$cellrow["id"];
@@ -94,7 +94,7 @@ while ($penrow=mysqli_fetch_array($pendata)) {
     echo("<td colspan=2><tt>" . stringfilt($cellrow["comments"]) . 
          "</td></tr>\n");
 
-    $singledata = mysqli_query($dbcnx, "SELECT * FROM gSingleCell" .
+    $singledata = mysqli_query($dbcnx, "SELECT * FROM gsinglecell" .
                               " WHERE masterid=$masterid");
     while ( $singrow = mysqli_fetch_array($singledata) ) {
       echo("<tr><td><tt><b>Cell:</b></td>\n");
@@ -123,12 +123,12 @@ while ($penrow=mysqli_fetch_array($pendata)) {
     }
     echo("</table>\n");
     
-    $rawfiledata = mysqli_query($dbcnx, "SELECT * FROM gDataRaw WHERE masterid=$masterid");
+    $rawfiledata = mysqli_query($dbcnx, "SELECT * FROM gdataraw WHERE masterid=$masterid");
     
     // list each raw data file
     $count=0;
     while ( $rawrow = mysqli_fetch_array($rawfiledata) ) {
-      // display file names associated with this gDataRaw entry
+      // display file names associated with this gdataraw entry
       $count+=1;
       echo("<HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE>\n");
       echo("<table cellpadding=0>\n");
@@ -136,7 +136,7 @@ while ($penrow=mysqli_fetch_array($pendata)) {
            $rawrow["runclass"] . "</td></tr>\n");
       echo("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n");
       echo("<tr><td><tt>Isolation:</td><td><tt>");
-      $singledata = mysqli_query($dbcnx, "SELECT * FROM gSingleRaw" .
+      $singledata = mysqli_query($dbcnx, "SELECT * FROM gsingleraw" .
                                 " WHERE masterid=$masterid" .
                                 " AND rawid=" . $rawrow["id"]);
       while ( $singrow = mysqli_fetch_array($singledata) ) {
@@ -169,7 +169,7 @@ while ($penrow=mysqli_fetch_array($pendata)) {
       //$rawid=$rawrow["id"];
       //echo("<tr><td><tt>Raw ID:</td><td><tt>$rawid</td></tr>");
       //echo("<tr><td><tt>File IDs:</td><td><tt>");
-      //$cellfiledata=mysqli_query($dbcnx, "SELECT * FROM sCellFile WHERE rawid=$rawid");
+      //$cellfiledata=mysqli_query($dbcnx, "SELECT * FROM scellfile WHERE rawid=$rawid");
       //while ( $cellrawrow = mysqli_fetch_array($cellfiledata) ) {
       //   echo($cellrawrow["id"] . " (" . $cellrawrow["stimfilefmt"] . ") ");
       //}

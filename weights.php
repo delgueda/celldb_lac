@@ -37,7 +37,7 @@ if (1==$action) {
     }
     if ($onschedule[$ii]!=$onschedule_old[$ii]) {
       $onschedule_text=" schedule=" . (int)$onschedule[$ii] . ",";
-      $sql="UPDATE gAnimal SET".
+      $sql="UPDATE ganimal SET".
         " onschedule=" . (int)$onschedule[$ii] .
         " WHERE animal='". $animal[$ii] ."'";
       mysqli_query($dbcnx, $sql);
@@ -49,14 +49,14 @@ if (1==$action) {
     $onschedule[$ii]=(int)$onschedule[$ii];
     $wetfood[$ii]=(int)$wetfood[$ii];
     
-    $sql="SELECT * FROM gHealth".
+    $sql="SELECT * FROM ghealth".
       " WHERE date='$pendate' AND animal_id=" . $animal_id[$ii];
     $hdata=mysqli_query($dbcnx, $sql);
     
     if ($row=mysqli_fetch_array($hdata)) {
       
-      // update existing gHealth entry
-      $sql="UPDATE gHealth SET".
+      // update existing ghealth entry
+      $sql="UPDATE ghealth SET".
         " animal=\"" . $animal[$ii] . "\"," .
         " $weight_text" .
         " $water_text" .
@@ -71,7 +71,7 @@ if (1==$action) {
     } else {
       
       // insert new penetration only if values entered
-      $sql="INSERT INTO gHealth".
+      $sql="INSERT INTO ghealth".
         " (animal_id,animal,date,water,weight,trained,schedule,".
         " timeonoroff,wetfood,notes,addedby,info)".
         " VALUES (".$animal_id[$ii].",\"" . $animal[$ii] . 
@@ -86,7 +86,7 @@ if (1==$action) {
       
     }
     
-    $sql="UPDATE gPenetration SET ".
+    $sql="UPDATE gpenetration SET ".
       "weight=" . $weight[$ii] . ",".
       "water=" . $water[$ii].
       " WHERE pendate='$pendate' AND animal='". $animal[$ii] ."'";
@@ -132,7 +132,7 @@ if (""!=$errormsg) {
 if (!isset($queryspecies) || ""==$queryspecies){
   $queryspecies="ferret,active";
 }
-mysqli_query($dbcnx, "UPDATE gUserPrefs SET ".
+mysqli_query($dbcnx, "UPDATE guserprefs SET ".
             " lastspecies=\"$queryspecies\" WHERE userid=\"$userid\"");
 
 $queryspecies=explode(",",$queryspecies);
@@ -182,17 +182,17 @@ if (0==$openforedit || ""==$openforedit) {
   
   // only retrieve non-"retired" animals (ie, onschedule=0 or 1)
   if ("active"==$sactive){
-    $sql="SELECT * FROM gAnimal".
+    $sql="SELECT * FROM ganimal".
       " WHERE species like \"$queryspecies\"".
       " AND onschedule<2 AND lab='$LAB' and not(animal like 'test')" .
       " ORDER BY animal;";
   } elseif ("mine"==$sactive){
-    $sql="SELECT * FROM gAnimal".
+    $sql="SELECT * FROM ganimal".
       " WHERE species like \"$queryspecies\"".
       " AND caretaker like '%$userid%' and not(animal like 'test')" .
       " ORDER BY animal;";
   } else {
-    $sql="SELECT * FROM gAnimal".
+    $sql="SELECT * FROM ganimal".
       " WHERE species like \"$queryspecies\"".
       " AND not(animal like 'test')" .
       " ORDER BY animal;";
@@ -229,7 +229,7 @@ if (0==$openforedit || ""==$openforedit) {
     }
     $sql="SELECT round(weight,$roundto) as weight, round(water,2) as water, date, ".
       " schedule " .
-      " FROM gHealth".
+      " FROM ghealth".
       " WHERE animal_id=$canimal_id AND date>='$firstdate'".
       " AND date<='$lastdate' ORDER BY date";
     $wdata = mysqli_query($dbcnx, $sql);
@@ -309,15 +309,15 @@ if (0==$openforedit || ""==$openforedit) {
     $afilt="";
   }
   
-  $sql="SELECT gAnimal.animal as name,gAnimal.onschedule,".
-    " gAnimal.id as animal_id, date, round(water,2) as water, round(weight,0) as weight, trained, schedule, timeonoroff, wetfood, gHealth.notes".
-    " FROM gAnimal LEFT JOIN gHealth".
-    " ON gAnimal.id=gHealth.animal_id AND date='$pendate'" .
-    " WHERE gAnimal.onschedule in (0,1) $afilt".
+  $sql="SELECT ganimal.animal as name,ganimal.onschedule,".
+    " ganimal.id as animal_id, date, round(water,2) as water, round(weight,0) as weight, trained, schedule, timeonoroff, wetfood, ghealth.notes".
+    " FROM ganimal LEFT JOIN ghealth".
+    " ON ganimal.id=ghealth.animal_id AND date='$pendate'" .
+    " WHERE ganimal.onschedule in (0,1) $afilt".
     " AND species like \"$queryspecies\"".
-    " AND not(gAnimal.animal like 'test')".
-    " GROUP BY gAnimal.animal,gAnimal.onschedule,date".
-    " ORDER BY gAnimal.animal;";
+    " AND not(ganimal.animal like 'test')".
+    " GROUP BY ganimal.animal,ganimal.onschedule,date".
+    " ORDER BY ganimal.animal;";
   $wdata = mysqli_query($dbcnx, $sql);
   
   if (!$wdata) {

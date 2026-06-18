@@ -34,7 +34,7 @@ if (1==$action && (""==$animal || ""==$cellprefix)) {
   $animal="NEW";
 }
 if (1==$action && -1==$id) {
-  $sql="SELECT * FROM gAnimal WHERE animal=\"$animal\"";
+  $sql="SELECT * FROM ganimal WHERE animal=\"$animal\"";
   $adata=mysqli_query($GLOBALS['dbcnx'], $sql);
   if (mysqli_num_rows($adata)>0) {
     $errormsg="ERROR: Animal already exists with the requested name.";
@@ -44,7 +44,7 @@ if (1==$action && -1==$id) {
   }
 }
 if (1==$action && -1==$id) {
-  $sql="SELECT * FROM gAnimal WHERE cellprefix=\"$cellprefix\"";
+  $sql="SELECT * FROM ganimal WHERE cellprefix=\"$cellprefix\"";
   $adata=mysqli_query($GLOBALS['dbcnx'], $sql);
   if (mysqli_num_rows($adata)>0) {
     $errormsg="ERROR: Animal already exists with the requested prefix.";
@@ -71,7 +71,7 @@ if (1==$action) {
   $formdata["lab"]=tidystr($formdata["lab"]);
   
   // actually save/update the data
-  $errormsg=savedata("gAnimal",$id,$formdata);
+  $errormsg=savedata("ganimal",$id,$formdata);
   
   if (is_numeric($errormsg)) {
     $rawid=$errormsg;
@@ -81,7 +81,7 @@ if (1==$action) {
 
  } elseif (2==$action) {
    // delete
-   $sql="DELETE FROM gAnimal WHERE id=$id";
+   $sql="DELETE FROM ganimal WHERE id=$id";
    $result=mysqli_query($GLOBALS['dbcnx'], $sql);
  }
 
@@ -117,7 +117,7 @@ if (!isset($queryspecies) || ""==$queryspecies){
   $queryspecies="%";
 }
 
-mysqli_query($GLOBALS['dbcnx'], "UPDATE gUserPrefs SET lastanimal=\"$animal\",".
+mysqli_query($GLOBALS['dbcnx'], "UPDATE guserprefs SET lastanimal=\"$animal\",".
             " lastspecies=\"$queryspecies\" WHERE userid=\"$userid\"");
 
 $queryspecies=explode(",",$queryspecies);
@@ -134,7 +134,7 @@ if (-1==$action) {
   
  } else {
   
-  $sql="SELECT * FROM gAnimal WHERE animal='$animal'";
+  $sql="SELECT * FROM ganimal WHERE animal='$animal'";
   $animaldata = mysqli_query($GLOBALS['dbcnx'], $sql);
   
   if ($row = mysqli_fetch_array($animaldata)) {
@@ -179,12 +179,12 @@ if (0==$openforedit || ""==$openforedit) {
   }
   echo("</select>&nbsp;&nbsp;");
   if ("active"==$sactive){
-    $animallistdata = mysqli_query($GLOBALS['dbcnx'], "SELECT animal FROM gAnimal" .
+    $animallistdata = mysqli_query($GLOBALS['dbcnx'], "SELECT animal FROM ganimal" .
                                   " WHERE species like \"$queryspecies\"".
                                   " AND onschedule<2 AND lab='$LAB'".
                                   " ORDER BY animal");
   } else {
-    $animallistdata = mysqli_query($GLOBALS['dbcnx'], "SELECT animal FROM gAnimal" .
+    $animallistdata = mysqli_query($GLOBALS['dbcnx'], "SELECT animal FROM ganimal" .
                                   " WHERE species like \"$queryspecies\"".
                                   " ORDER BY animal");
   }
@@ -291,7 +291,7 @@ if (0==$openforedit || ""==$openforedit) {
   echo("  <td colspan=2>" . stringfilt($notes) . "</td>\n");
   echo("</tr>\n");
   
-  $sql="SELECT * FROM gHealth WHERE animal_id=$id ORDER BY date DESC LIMIT 1;";
+  $sql="SELECT * FROM ghealth WHERE animal_id=$id ORDER BY date DESC LIMIT 1;";
   $wdata=mysqli_query($GLOBALS['dbcnx'], $sql);
   if ($row=mysqli_fetch_array($wdata)) {
     

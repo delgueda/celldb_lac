@@ -7,7 +7,7 @@ if (""==$allowqueuemaster) {
   $allowqueuemaster=1;
 }
 if (""==$orderby) {
-  $orderby="gUserPrefs.userid";
+  $orderby="guserprefs.userid";
 }
 if (""==$action) {
   $action=0;
@@ -15,7 +15,7 @@ if (""==$action) {
 
 if (0!=$action && $target>0) {
 
-  $sql="SELECT * FROM gUserPrefs WHERE id=$target";
+  $sql="SELECT * FROM guserprefs WHERE id=$target";
   $userdata=mysqli_query($dbcnx, $sql);
   
   if (0==mysqli_num_rows($userdata)) {
@@ -31,7 +31,7 @@ if (0!=$action && $target>0) {
     
     if (1==$action) {
       //echo("Changing colors for id=$target<br>\n");
-      $sql="UPDATE gUserPrefs SET ".
+      $sql="UPDATE guserprefs SET ".
         "bgcolor=\"$bgcolor\",".
         "fgcolor=\"$fgcolor\",".
         "linkfg=\"$newlinkfg\",".
@@ -103,19 +103,19 @@ echo("</td></tr></table>\n");
 // query celldb for queue entries matching search criteria
 
 if ($activeusers) {
-  $sql="SELECT gUserPrefs.*,count(tQueue.id) as jobcount," .
-    " sum(tQueue.complete in (0,-1)) as activejobs".
-    " FROM tQueue LEFT JOIN gUserPrefs" .
-    " ON gUserPrefs.userid=tQueue.user" .
-    " GROUP BY tQueue.user" .
+  $sql="SELECT guserprefs.*,count(tqueue.id) as jobcount," .
+    " sum(tqueue.complete in (0,-1)) as activejobs".
+    " FROM tqueue LEFT JOIN guserprefs" .
+    " ON guserprefs.userid=tqueue.user" .
+    " GROUP BY tqueue.user" .
     " HAVING activejobs>0" .
     " ORDER BY $orderby";
 } else {
-  $sql="SELECT gUserPrefs.*,count(tQueue.id) as jobcount," .
-    " sum(tQueue.complete in (0,-1)) as activejobs".
-    " FROM gUserPrefs LEFT JOIN tQueue" .
-    " ON gUserPrefs.userid=tQueue.user" .
-    " GROUP BY gUserPrefs.id" .
+  $sql="SELECT guserprefs.*,count(tqueue.id) as jobcount," .
+    " sum(tqueue.complete in (0,-1)) as activejobs".
+    " FROM guserprefs LEFT JOIN tqueue" .
+    " ON guserprefs.userid=tqueue.user" .
+    " GROUP BY guserprefs.id" .
     " ORDER BY $orderby";
 }
 
@@ -142,9 +142,9 @@ $sorturl="queueusers.php?userid=$userid&sessionid=$sessionid&activeusers=$active
 
 echo("<table>");
 echo("<tr bgcolor=\"#bbbbff\">\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "gUserPrefs.id\">id</a></b><br></td>\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "gUserPrefs.userid\">name</a></b><br></td>\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "gUserPrefs.lab\">lab</a></b><br></td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "guserprefs.id\">id</a></b><br></td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "guserprefs.userid\">name</a></b><br></td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "guserprefs.lab\">lab</a></b><br></td>\n");
 echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "jobcount DESC\">jobs</a>&nbsp;</td>\n");
 
 $keycount=4;
@@ -168,7 +168,7 @@ while ( $row = mysqli_fetch_array($userdata) ) {
     "sum(complete=0) as newcount," .
     "sum(complete=1) as donecount," .
     "sum(complete=2) as deadcount" .
-    " FROM tQueue WHERE user=\"" . $row["userid"] . "\"";
+    " FROM tqueue WHERE user=\"" . $row["userid"] . "\"";
   $jobdata=mysqli_query($dbcnx, $sql);
   $jobrow= mysqli_fetch_array($jobdata);
   
@@ -222,7 +222,7 @@ while ( $row = mysqli_fetch_array($userdata) ) {
       " count(id) as total, sum(complete=0) as new,".
       " sum(complete=1) as done,sum(complete=-1) as running,".
       " sum(complete=2) as dead, round(avg(priority),0) as priority".
-      " FROM tQueue WHERE user=\"" . $row["userid"] . "\"".
+      " FROM tqueue WHERE user=\"" . $row["userid"] . "\"".
       " GROUP BY grp ORDER BY priority DESC, min(id)";
     $jobdata=mysqli_query($dbcnx, $sql); 
     while ($jr=mysqli_fetch_array($jobdata)){
@@ -268,11 +268,11 @@ echo("<tr>\n");
 echo("<td colspan=8 bgcolor=\"#bbbbff\"><b>My settings:</b></td>");
 echo("</tr>\n");
 
-$sql="SELECT gUserPrefs.*,count(tQueue.id) as jobcount" .
-     " FROM gUserPrefs LEFT JOIN tQueue" .
-     " ON gUserPrefs.userid=tQueue.user" .
-     " WHERE gUserPrefs.userid=\"$userid\"" .
-     " GROUP BY gUserPrefs.id";
+$sql="SELECT guserprefs.*,count(tqueue.id) as jobcount" .
+     " FROM guserprefs LEFT JOIN tqueue" .
+     " ON guserprefs.userid=tqueue.user" .
+     " WHERE guserprefs.userid=\"$userid\"" .
+     " GROUP BY guserprefs.id";
 $userdata=mysqli_query($dbcnx, $sql);
 while ( $row = mysqli_fetch_array($userdata) ) {
 

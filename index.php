@@ -1,7 +1,11 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 //automatically parse html posted variables (i think?)
 //import_request_variables("GP", "");
-$logout=$_GET['logout'];
+$logout=isset($_GET['logout']) ? $_GET['logout'] : null;
 
 if ($logout) {
   // global include: connect to db and get basic info about user prefs
@@ -40,7 +44,7 @@ if (""!=$sessionid) {
 //echo("<p align=\"center\"><img width=300 border=0 src=\"photo/bf_ferret.jpg\"></p>");
 echo("<p align=\"center\"><img width=300 border=0 src=\"photo/rat.jpg\"></p>");
 echo("<p align=\"center\">Welcome to CellDB.<br>Today is " .date("l, F dS Y") . "<br>");
-$sql="SELECT count(id) as ucount from gUserPrefs WHERE lab='$LAB'";
+$sql="SELECT count(id) as ucount from guserprefs WHERE lab='$LAB'";
 $adata=mysqli_query($dbcnx, $sql);
 $urow=mysqli_fetch_array($adata);
 $ucount=$urow['ucount'];

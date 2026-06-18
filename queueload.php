@@ -7,7 +7,7 @@ if (""==$allowqueuemaster) {
   $allowqueuemaster=1;
 }
 if (""==$orderby) {
-  $orderby="tComputer.load1";
+  $orderby="tcomputer.load1";
 }
 
 ?>
@@ -30,7 +30,7 @@ include "./queuesum.php3";
 
 // query celldb for queue entries matching search criteria
 
-$sql="SELECT * FROM tComputer" .
+$sql="SELECT * FROM tcomputer" .
      " WHERE allowqueuemaster>=$allowqueuemaster" .
      " AND name like \"$machinename\"" .
      " AND location in (0,3)" .
@@ -52,9 +52,9 @@ $sorturl="queueload.php3?userid=$userid&sessionid=$sessionid&&allowqueuemaster=$
 
 echo("<table>");
 echo("<tr bgcolor=\"#bbbbff\">\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.id\">id</a></b><br></td>\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.name\">name (jobs)</a></b><br></td>\n");
-echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tComputer.load1\">load1/15</a></b><br></td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.id\">id</a></b><br></td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.name\">name (jobs)</a></b><br></td>\n");
+echo("  <td><b>&nbsp;<a href=\"" . $sorturl . "tcomputer.load1\">load1/15</a></b><br></td>\n");
 
 for ($ii=0; $ii<$keycount; $ii++) {
   echo("  <td width=" . ($loadsc) . " align=right>" . ($ii+1) . ".0</td>\n");
@@ -145,7 +145,7 @@ echo("</td></tr></table>\n");
 
 echo("<HR ALIGN=CENTER SIZE=1 WIDTH=100% NOSHADE>");
 
-$sql="SELECT * FROM tGlobalData";
+$sql="SELECT * FROM tglobaldata";
 $globaldata=mysqli_query($dbcnx, $sql);
 $row=mysqli_fetch_array($globaldata);
 echo("Last queuemaster tick: " . $row["daemonclick"] . "<br>");
