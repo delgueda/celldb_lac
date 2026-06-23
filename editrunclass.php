@@ -59,7 +59,7 @@ if (0==$action) {
  }
 
 if ($action>=0 && !$result) {
-  $errormsg=mysqli_error();
+  $errormsg=mysqli_error($GLOBALS['dbcnx']);
  }
 
 

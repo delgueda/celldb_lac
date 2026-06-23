@@ -162,7 +162,7 @@ $rawsql="SELECT gdataraw.*,gpenetration.pendate,gcellmaster.penid,".
 $rawfiledata=mysqli_query($dbcnx, $rawsql);
 
 if (!$rawfiledata) {
-  echo("<P>Error performing query: " . mysqli_error() . "($sql)</P>");
+  echo("<P>Error performing query: " . mysqli_error($GLOBALS['dbcnx']) . "($sql)</P>");
   exit();
 }
 

@@ -40,7 +40,7 @@ if (""<>$sql && strtoupper(substr($sql,0,6))=="SELECT") {
   $sqldata=mysqli_query($dbcnx, $sql);
   
   if (!$sqldata) {
-    echo 'Could not run query: ' . mysqli_error();
+    echo 'Could not run query: ' . mysqli_error($GLOBALS['dbcnx']);
     exit;
   } else {
     

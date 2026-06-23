@@ -136,7 +136,7 @@ if (2==$action && $masterid>-1) {
       " VALUES (\"$cellid\",\"$cellid\",\"".$area[$newchannum]."\",$penid,".
       "$masterid,$newchannum,$newunit,\"$addedby\",\"$siteinfo\")";
     $result=mysqli_query($dbcnx, $sql);
-    $singleid=mysqli_insert_id();
+    $singleid=mysqli_insert_id($GLOBALS['dbcnx']);
     //echo("$sql<br>");
     
     // create a gsingleraw entry for new cell matched to every 

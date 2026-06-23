@@ -260,7 +260,7 @@ echo("</p>\n");
 //echo("</FORM>\n");
 
 if (!$celldata) {
-  echo("<P>Error performing query $sql: " . mysqli_error() . "</P>");
+  echo("<P>Error performing query $sql: " . mysqli_error($GLOBALS['dbcnx']) . "</P>");
   exit();
 }
 

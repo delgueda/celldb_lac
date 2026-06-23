@@ -88,7 +88,7 @@ $sql="SELECT * FROM tqueue" .
 $queuedata=mysqli_query($dbcnx, $sql);
 
 if (!$queuedata) {
-  echo("<P>Error performing query: " . mysqli_error() . "</P>");
+  echo("<P>Error performing query: " . mysqli_error($GLOBALS['dbcnx']) . "</P>");
   exit();
 }
 

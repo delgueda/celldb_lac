@@ -98,7 +98,7 @@ if (1==$action) {
 }
 
 //if ($action>=0 && !$result) {
-//  $errormsg=mysqli_error();
+//  $errormsg=mysqli_error($GLOBALS['dbcnx']);
 //  $openforedit=1;
 //  $action=-1;
 // }
@@ -321,8 +321,8 @@ if (0==$openforedit || ""==$openforedit) {
   $wdata = mysqli_query($dbcnx, $sql);
   
   if (!$wdata) {
-    echo("<p><b><font color=\"#CC0000\">".mysqli_error()."</font></b></p>\n");
-    $errormsg=mysqli_error();
+    echo("<p><b><font color=\"#CC0000\">".mysqli_error($GLOBALS['dbcnx'])."</font></b></p>\n");
+    $errormsg=mysqli_error($GLOBALS['dbcnx']);
   }
   
   echo("<FORM ACTION=\"weights.php\" METHOD=POST>\n");

@@ -81,7 +81,7 @@ if (1==$action) {
  }
 
 if ($action>=0 && !$result) {
-  $errormsg=mysqli_error() . ": " . $sql;
+  $errormsg=mysqli_error($GLOBALS['dbcnx']) . ": " . $sql;
   $openforedit=1;
   $action=-1;
 }

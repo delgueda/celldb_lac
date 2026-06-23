@@ -264,7 +264,7 @@ $sql="SELECT * FROM tcomputer" .
 $compdata=mysqli_query($dbcnx, $sql);
 
 if (!$compdata) {
-  echo("<P>Error performing query: " . mysqli_error() . "</P>");
+  echo("<P>Error performing query: " . mysqli_error($GLOBALS['dbcnx']) . "</P>");
   exit();
 }
 

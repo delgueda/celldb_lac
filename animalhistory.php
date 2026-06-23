@@ -222,7 +222,7 @@ echo("</p>\n");
 //echo("</FORM>\n");
 
 if (!$celldata) {
-  echo("<P>Error performing query: " . mysqli_error() . "</P>");
+  echo("<P>Error performing query: " . mysqli_error($GLOBALS['dbcnx']) . "</P>");
   exit();
 }
 

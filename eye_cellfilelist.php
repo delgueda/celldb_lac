@@ -177,7 +177,7 @@ echo("<INPUT TYPE=SUBMIT VALUE=\"Filter\">");
 echo("</FORM><br>");
 
 if (!$rawfiledata) {
-  echo("<P>Error performing query: " . mysqli_error() . "</P>");
+  echo("<P>Error performing query: " . mysqli_error($GLOBALS['dbcnx']) . "</P>");
   exit();
 }
 

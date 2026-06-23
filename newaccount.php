@@ -82,11 +82,11 @@ if (2==$action) {
       "$sessionid\",6,\"" . tidystr($email) . "\",\"$realname\",".
       "\"$LAB\")";
     $result=mysqli_query($dbcnx, $sql);
-    $uid=mysqli_insert_id();
+    $uid=mysqli_insert_id($GLOBALS['dbcnx']);
   }
   
-  if (mysqli_errno()>0) {
-    echo mysqli_errno().": ".mysqli_error()."<BR>";
+  if (mysqli_errno($GLOBALS['dbcnx'])>0) {
+    echo mysqli_errno($GLOBALS['dbcnx']).": ".mysqli_error($GLOBALS['dbcnx'])."<BR>";
     echo("$sql $result");
   } else {
     // tell sysadmin that they signed up

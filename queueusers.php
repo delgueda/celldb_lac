@@ -123,7 +123,7 @@ if ($activeusers) {
 $userdata=mysqli_query($dbcnx, $sql);
 
 if (!$userdata) {
-  echo("<P>Error performing query: " . mysqli_error() . "</P>");
+  echo("<P>Error performing query: " . mysqli_error($GLOBALS['dbcnx']) . "</P>");
   exit();
 }
 

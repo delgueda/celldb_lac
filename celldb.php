@@ -419,7 +419,19 @@ if (""!=$userid) {
      if (""==$recstat) {
        $recstat=$userrow["lasttraining"];
      }
-     $uidnum=$userrow["id"];
+      if (null === $animal || "" === $animal) {
+        $animal = "All";
+      }
+      if (null === $well || "" === $well) {
+        $well = 0;
+      }
+      if (null === $queryspecies || "" === $queryspecies) {
+        $queryspecies = "rat,all";
+      }
+      if (null === $recstat || "" === $recstat) {
+        $recstat = 0;
+      }
+      $uidnum=$userrow["id"];
      $lastjobcomplete=$userrow["lastjobcomplete"];
      $lastjobuser=$userrow["lastjobuser"];
      $lastallowqueuemaster=$userrow["lastallowqueuemaster"];
@@ -435,7 +447,7 @@ if (""!=$userid) {
    } elseif ($seclevel>0) {
      $animal="All";
      $well=0;
-     mysqli_query("INSERT INTO guserprefs (userid,lastanimal,lastwell) VALUES (\"$userid\",\"$animal\",$well)");
+     mysqli_query($dbcnx, "INSERT INTO guserprefs (userid,lastanimal,lastwell) VALUES (\"$userid\",\"$animal\",$well)");
      $userdata = mysqli_query($dbcnx, "SELECT * FROM guserprefs WHERE userid=\"$userid\"");
      $userrow=mysqli_fetch_array($userdata);
    }
@@ -574,6 +586,10 @@ if ("eye"==$view) {
 }
 
 // yes, very insecure!  I know.  SVD
+if (empty($queryspecies)) {
+  $queryspecies = "rat,all";
+}
+
 extract($_GET);
 extract($_POST);
 ?>

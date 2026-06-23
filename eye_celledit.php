@@ -48,10 +48,10 @@ if (2==$action) {
         $yoffset[1] . ",\"$eyecal\",".
         "\"$addedby\",\"$siteinfo\",$training)";
       $result=mysqli_query($dbcnx, $sql);
-      //echo mysqli_errno().": ".mysqli_error()."<BR>";
+      //echo mysqli_errno($GLOBALS['dbcnx']).": ".mysqli_error($GLOBALS['dbcnx'])."<BR>";
       //echo("$sql $result");
       //exit;
-      $masterid=mysqli_insert_id();
+      $masterid=mysqli_insert_id($GLOBALS['dbcnx']);
       $newcell="New Cell";
    } else {
      // gdataraw entry does exist.  update with posted values
@@ -143,7 +143,7 @@ if (2==$action) {
        " VALUES (\"$cellid\",\"$cellid\",\"$area[$cellcount]\",$penid,".
        "$masterid,\"$addedby\",\"$siteinfo\")";
      $result=mysqli_query($dbcnx, $sql);
-     $singleid=mysqli_insert_id();
+     $singleid=mysqli_insert_id($GLOBALS['dbcnx']);
      //echo("$sql<br>");
      
      $sql="UPDATE gsinglecell set singleid=$singleid WHERE id=$singleid";

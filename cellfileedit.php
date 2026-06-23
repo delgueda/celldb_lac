@@ -113,7 +113,7 @@ if (2==$action) {
          "\"$addedby\",\"$siteinfo\")";
        //echo($sql . "<br>");
        $result=mysqli_query($dbcnx, $sql);
-       $singleid[$ii]=mysqli_insert_id();
+       $singleid[$ii]=mysqli_insert_id($GLOBALS['dbcnx']);
        
      } else {
        $sql="UPDATE gsingleraw SET ".
