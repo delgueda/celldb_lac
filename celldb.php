@@ -518,7 +518,7 @@ if ("eye"==$view) {
     while ($trow=mysqli_fetch_array($tabledata)) {
       $key=$trow["Field"];
       $type=$trow["Type"];
-      if (isset($formdata[$key]) && !is_array($formdata[$key])) {
+      if (isset($formdata[$key]) && !is_array($formdata[$key]) && !("id" == $key && $id <= 0)) {
         $data=$formdata[$key];
         $sqlfields=$sqlfields . $key . ", ";
         if (strstr($type,"double")) {
